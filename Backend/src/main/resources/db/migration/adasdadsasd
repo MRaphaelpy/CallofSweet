@@ -1,0 +1,98 @@
+-- All tables are here
+CREATE TABLE user (
+                      id INT AUTO_INCREMENT PRIMARY KEY,
+                      name VARCHAR(255) NOT NULL,
+                      email VARCHAR(255) NOT NULL UNIQUE,
+                      password VARCHAR(255) NOT NULL,
+                      address VARCHAR(255),
+                      role VARCHAR(50),
+                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE product (
+                         id INT AUTO_INCREMENT PRIMARY KEY,
+                         name VARCHAR(255) NOT NULL,
+                         description TEXT,
+                         price FLOAT NOT NULL,
+                         category VARCHAR(100),
+                         brand VARCHAR(100),
+                         image_url VARCHAR(255),
+                         rating FLOAT,
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        user_id INT NOT NULL,
+                        total_price FLOAT NOT NULL,
+                        status VARCHAR(50),
+                        payment_method VARCHAR(50),
+                        tracking_code VARCHAR(50),
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cart (
+                      id INT AUTO_INCREMENT PRIMARY KEY,
+                      user_id INT NOT NULL,
+                      FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+CREATE TABLE review (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        user_id INT NOT NULL,
+                        product_id INT NOT NULL,
+                        rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+                        comment TEXT,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+                        FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+);
+
+CREATE TABLE payment (
+                         id INT AUTO_INCREMENT PRIMARY KEY,
+                         order_id INT NOT NULL,
+                         payment_method VARCHAR(50),
+                         transaction_id VARCHAR(100),
+                         amount FLOAT NOT NULL,
+                         status VARCHAR(50),
+                         FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE promotion (
+                           id INT AUTO_INCREMENT PRIMARY KEY,
+                           name VARCHAR(255) NOT NULL,
+                           discount_percentage FLOAT NOT NULL CHECK (discount_percentage >= 0 AND discount_percentage <= 100),
+                           start_date TIMESTAMP,
+                           end_date TIMESTAMP,
+                           is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE product_variation (
+                                   id INT AUTO_INCREMENT PRIMARY KEY,
+                                   product_id INT NOT NULL,
+                                   color VARCHAR(50),
+                                   size VARCHAR(50),
+                                   stock INT NOT NULL CHECK (stock >= 0),
+                                   FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_item (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            order_id INT NOT NULL,
+                            variation_id INT NOT NULL,
+                            quantity INT NOT NULL CHECK (quantity > 0),
+                            subtotal FLOAT NOT NULL,
+                            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+                            FOREIGN KEY (variation_id) REFERENCES product_variation(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cart_item (
+                           id INT AUTO_INCREMENT PRIMARY KEY,
+                           cart_id INT NOT NULL,
+                           variation_id INT NOT NULL,
+                           quantity INT NOT NULL CHECK (quantity > 0),
+                           subtotal FLOAT NOT NULL,
+                           FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE,
+                           FOREIGN KEY (variation_id) REFERENCES product_variation(id) ON DELETE CASCADE
+);

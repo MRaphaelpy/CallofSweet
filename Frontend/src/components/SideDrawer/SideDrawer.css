@@ -1,0 +1,38 @@
+.side-drawer .MuiPaper-root {
+    width: 280px;
+    background: linear-gradient(to bottom, #f8f0fe, #ffffff);
+    border-radius: 0 30px 30px 0;
+  }
+  
+  .drawer-container {
+    height: 100%;
+  }
+  
+  .drawer-header {
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .drawer-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #9c27b0;
+  }
+  
+  .drawer-item {
+    border-radius: 12px;
+    margin: 4px 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .drawer-item:hover {
+    background-color: rgba(156, 39, 176, 0.08) !important;
+  }
+  
+  .drawer-item .MuiListItemIcon-root {
+    color: #9c27b0;
+    min-width: 40px;
+  }

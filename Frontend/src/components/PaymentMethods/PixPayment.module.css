@@ -1,0 +1,463 @@
+.pixPayment {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.paymentContainer {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+
+.tabsContainer {
+  display: flex;
+  width: 100%;
+  background: linear-gradient(to right, #edf1f7, #e3e8f0);
+  padding: 1px;
+  border-radius: 12px 12px 0 0;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #647acb;
+  transition: all 0.3s ease;
+  border-radius: 10px 10px 0 0;
+  margin-top: 4px;
+}
+
+.tabButton svg {
+  font-size: 18px;
+}
+
+.tabButton.activeTab {
+  background-color: #ffffff;
+  color: #4361ee;
+  box-shadow: 0 -2px 15px rgba(67, 97, 238, 0.1);
+}
+
+.tabButton:hover:not(.activeTab) {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+
+.contentContainer {
+  position: relative;
+  overflow: hidden;
+  min-height: 460px;
+  padding: 24px;
+}
+
+
+.pixContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pixHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e6e8eb;
+}
+
+.amountDisplay {
+  display: flex;
+  flex-direction: column;
+}
+
+.amountDisplay span {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.amountDisplay h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.countdownContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.countdownContent span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.countdownContent strong {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.clockIcon {
+  color: #4361ee;
+  font-size: 20px;
+}
+
+.expiringSoon .clockIcon,
+.expiringSoon .countdownContent strong {
+  color: #ef4444;
+}
+
+.qrLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  min-height: 250px;
+}
+
+.qrLoading p {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+}
+
+.qrContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.qrCodeWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.qrCode {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 2px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.qrPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(90deg, #4361ee 25%, transparent 25%, transparent 75%, #4361ee 75%),
+    linear-gradient(90deg, #4361ee 25%, transparent 25%, transparent 75%, #4361ee 75%),
+    linear-gradient(0deg, #4361ee 25%, transparent 25%, transparent 75%, #4361ee 75%),
+    linear-gradient(0deg, #4361ee 25%, transparent 25%, transparent 75%, #4361ee 75%),
+    linear-gradient(90deg, #000 5%, transparent 5%, transparent 95%, #000 95%),
+    linear-gradient(0deg, #000 5%, transparent 5%, transparent 95%, #000 95%);
+  background-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+  background-position: 0 0, 20px 20px, 0 0, 20px 20px, 0 0, 0 0;
+  background-repeat: repeat;
+  opacity: 0.7;
+  border-radius: 8px;
+}
+
+.qrLogo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  border-radius: 12px;
+  box-shadow: 0 0 0 6px white;
+  z-index: 2;
+}
+
+.pixCodeSection {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.pixCodeHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mobileIcon {
+  color: #4361ee;
+}
+
+.pixCodeBox {
+  display: flex;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  align-items: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.pixCode {
+  flex: 1;
+  font-family: monospace;
+  font-size: 14px;
+  color: #334155;
+  margin: 0;
+  word-break: break-all;
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #4361ee;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copySuccess {
+  background-color: #4CAF50;
+}
+
+.instructionsContainer {
+  background-color: #f1f5fe;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid #4361ee;
+}
+
+.instructionsHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.infoIcon {
+  color: #4361ee;
+  font-size: 18px;
+}
+
+.instructionsHeader h4 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 16px;
+}
+
+.instructions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instructions li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #4361ee;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.customerInfoForm {
+  padding: 16px;
+}
+
+.formTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e6e8eb;
+}
+
+.formTitle svg {
+  color: #4361ee;
+  font-size: 20px;
+}
+
+.formTitle h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.formFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .formFields {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inputField {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.inputField:focus {
+  border-color: #4361ee;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+.securityInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #f1f5fe;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.securityIcon {
+  font-size: 22px;
+}
+
+.securityInfo p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.actionButtonContainer {
+  padding: 24px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(249,250,251,1));
+}
+
+.buttonWrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.confirmButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirmButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+}
+
+.confirmButton:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.confirmIcon {
+  font-size: 20px;
+}
+
+@media (max-width: 600px) {
+  .pixHeader {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .countdown {
+    width: 100%;
+  }
+  
+  .pixCodeBox {
+    flex-direction: column;
+  }
+  
+  .copyButton {
+    width: 100%;
+  }
+}

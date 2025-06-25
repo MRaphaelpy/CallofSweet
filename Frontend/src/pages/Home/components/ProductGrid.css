@@ -1,0 +1,143 @@
+/* ProductGrid.css - Versão corrigida e unificada */
+
+.product-card {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 24px !important;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffffff, #faf7fd) !important;
+  box-shadow: 0 4px 8px rgba(156, 39, 176, 0.1) !important;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 30px rgba(156, 39, 176, 0.15) !important;
+}
+
+.top-icons {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.discount-chip {
+  pointer-events: all;
+  font-weight: bold;
+  border-radius: 20px !important;
+  padding: 0 10px !important;
+  background-color: #f50057 !important;
+  color: white !important;
+}
+
+.favorite-button {
+  pointer-events: all;
+  background-color: white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+}
+
+.favorite-button:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.product-image {
+  transition: all 0.5s ease;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.product-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px !important;
+  flex-grow: 1;
+  height: 190px;
+  overflow: hidden;
+}
+
+.product-name {
+  font-weight: 600 !important;
+  color: #4a154b !important;
+  font-size: 1.2rem !important;
+  height: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  margin-bottom: 8px;
+}
+
+.product-description {
+  color: #6d6d6d !important;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 12px;
+}
+
+.product-price {
+  font-weight: 700 !important;
+  color: #9c27b0 !important;
+  font-size: 1.4rem !important;
+  margin-top: 8px !important;
+}
+
+.card-actions {
+  padding: 0 20px 20px !important;
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.add-button {
+  border-radius: 12px !important;
+  padding: 10px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.25) !important;
+}
+
+.add-button:hover {
+  box-shadow: 0 8px 16px rgba(156, 39, 176, 0.35) !important;
+}
+
+/* Ajustes para garantir altura fixa */
+.brand-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: 8px;
+}
+
+.price-category-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}

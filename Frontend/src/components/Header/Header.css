@@ -1,0 +1,76 @@
+.header {
+  background: linear-gradient(to right, #9c27b0, #8e24aa);
+  box-shadow: 0 4px 20px rgba(156, 39, 176, 0.2);
+}
+
+.header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 16px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-family: 'Pacifico', cursive;
+  letter-spacing: 1px;
+}
+
+.header-avatar {
+  background-color: #f06292;
+  width: 45px;
+  height: 45px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.header-greeting {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.search-field {
+  transition: all 0.3s ease;
+}
+
+.search-field.focused {
+  width: 340px !important;
+}
+
+.search-field .MuiOutlinedInput-root {
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+
+.search-field .MuiInputBase-input {
+  color: white;
+}
+
+.search-field .MuiInputBase-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-button {
+  margin-right: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

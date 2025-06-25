@@ -1,0 +1,37 @@
+
+.select-field {
+    margin-bottom: 20px;
+  }
+  
+  .select-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .select-field select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    transition: border-color 0.3s;
+    appearance: auto;
+  }
+  
+  .select-field select:focus {
+    outline: none;
+    border-color: #4a7bff;
+  }
+  
+  .select-field select.error {
+    border-color: #e74c3c;
+  }
+  
+  .select-field .error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 6px;
+  }

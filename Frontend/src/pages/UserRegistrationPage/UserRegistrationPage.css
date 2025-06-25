@@ -1,0 +1,37 @@
+
+.registration-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f9fc;
+    padding: 20px;
+  }
+  
+  .registration-container {
+    width: 100%;
+    max-width: 550px;
+  }
+  
+  .error-banner {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .login-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .login-link a {
+    color: #4a7bff;
+    text-decoration: none;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }

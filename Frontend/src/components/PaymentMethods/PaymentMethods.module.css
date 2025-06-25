@@ -1,0 +1,420 @@
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.formSection {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.formSection h3 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: center;
+}
+
+
+.creditCardPayment {
+  width: 100%;
+}
+
+.cardContainer {
+  perspective: 1000px;
+  margin-bottom: 2rem;
+}
+
+.creditCard {
+  width: 100%;
+  max-width: 380px;
+  height: 240px;
+  margin: 0 auto;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s;
+}
+
+.creditCard.flipped {
+  transform: rotateY(180deg);
+}
+
+.cardFront,
+.cardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.cardFront {
+  background: linear-gradient(135deg, #4a6cf7, #2c3e50);
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardBack {
+  background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.cardBrand {
+  align-self: flex-end;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: auto;
+}
+
+.cardNumber {
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardHolder,
+.cardExpiry {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHolder span,
+.cardExpiry span {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin-bottom: 0.3rem;
+}
+
+.cardStrip {
+  width: 100%;
+  height: 40px;
+  background-color: #444;
+  margin: 1.5rem 0;
+}
+
+.cardCvv {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: #333;
+  border-radius: 4px;
+  width: 80%;
+  font-size: 0.9rem;
+}
+
+.cvvTitle {
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+  color: #777;
+}
+
+.cvvBand {
+  background-color: #f1f1f1;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cvvText {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+.addressFields {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pixPayment {
+  width: 100%;
+}
+
+.pixContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.pixQrContainer {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrCode {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrLoading {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.fakeQrCode {
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border: 1px solid #ddd;
+  position: relative;
+}
+
+.qrPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 10px,
+    #000 10px,
+    #000 20px
+  ),
+  repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 10px,
+    #000 10px,
+    #000 20px
+  );
+  background-size: 20px 20px;
+  clip-path: inset(10% 10% 10% 10%);
+}
+
+.pixInstructions {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.expiringSoon {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.pixCodeContainer {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pixCodeLabel {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.pixCodeValue {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  word-break: break-all;
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.pixSteps {
+  margin-left: 1.5rem;
+  margin-top: 1rem;
+}
+
+.pixSteps li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+
+.bankSlipPayment {
+  width: 100%;
+}
+
+.bankSlipContainer {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.bankSlipPreview {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.bankSlipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.bankLogo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #2c3e50;
+}
+
+.bankSlipTitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.bankSlipInfo p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.bankSlipBarcode {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.barcode {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  background-color: white;
+  border: 1px solid #ddd;
+}
+
+.barcodeLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    #000,
+    #000 2px,
+    transparent 2px,
+    transparent 5px
+  );
+  opacity: 0.8;
+}
+
+.bankSlipCodeDisplay {
+  width: 100%;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-align: center;
+  word-break: break-all;
+  padding: 0.5rem;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+}
+
+.bankSlipActions {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.bankSlipInstructions {
+  margin-top: 1.5rem;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.bankSlipInstructions h4 {
+  margin-bottom: 0.8rem;
+  color: #333;
+}
+
+.bankSlipInstructions ul {
+  padding-left: 1.5rem;
+}
+
+.bankSlipInstructions li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 768px) {
+  .pixContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .addressFields {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .addressFields {
+    grid-template-columns: 1fr;
+  }
+  
+  .creditCard {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.586;
+  }
+  
+  .bankSlipActions {
+    flex-direction: column;
+  }
+}

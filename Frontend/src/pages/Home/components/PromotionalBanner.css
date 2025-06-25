@@ -1,0 +1,39 @@
+.promotional-banner {
+    background-color: #f8f0fe;
+    background-image: linear-gradient(135deg, #f8f0fe 0%, #f3e7fc 100%);
+    padding-top: 64px;
+    padding-bottom: 64px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+    border-radius: 30px;
+  }
+  
+  .promo-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(156, 39, 176, 0.15);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .promo-title {
+    font-family: 'Pacifico', cursive;
+    color: #9c27b0;
+    margin-bottom: 20px;
+  }
+  
+  .promo-text {
+    color: #6d6d6d;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+  
+  .promo-button {
+    padding: 12px 30px !important;
+    border-radius: 30px !important;
+    font-size: 1rem !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 6px 15px rgba(156, 39, 176, 0.25) !important;
+  }

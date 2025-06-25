@@ -1,0 +1,39 @@
+
+.input-field {
+    margin-bottom: 20px;
+  }
+  
+  .input-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+  }
+  
+  .input-field input:focus {
+    outline: none;
+    border-color: #4a7bff;
+  }
+  
+  .input-field input.error {
+    border-color: #e74c3c;
+  }
+  
+  .input-field .error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  
+  .required {
+    color: #e74c3c;
+  }

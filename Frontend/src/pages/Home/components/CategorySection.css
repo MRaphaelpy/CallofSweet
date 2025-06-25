@@ -1,0 +1,26 @@
+.category-button {
+    border-radius: 16px !important;
+    padding: 12px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    min-width: 120px !important;
+    background-color: rgba(156, 39, 176, 0.05) !important;
+    border-color: rgba(156, 39, 176, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  .category-button:hover {
+    background-color: rgba(156, 39, 176, 0.1) !important;
+    border-color: #9c27b0 !important;
+  }
+  
+  .category-icon {
+    font-size: 2rem !important;
+    margin-bottom: 4px;
+  }
+  
+  .category-name {
+    font-weight: 500 !important;
+    color: #4a154b !important;
+  }

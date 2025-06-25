@@ -1,0 +1,122 @@
+
+.profile-container {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+  
+  .profile-title {
+    margin-bottom: 2rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .profile-paper {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .profile-tabs {
+    background-color: #f5f5f5;
+  }
+  
+  .profile-content {
+    padding: 2rem;
+  }
+  
+  .section-container {
+    min-height: 50vh;
+  }
+  
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-avatar {
+    margin-bottom: 1rem;
+    border: 3px solid #f0f0f0;
+  }
+  
+  .camera-button {
+    position: absolute !important;
+    bottom: 0;
+    right: 0;
+    background-color: white !important;
+    border: 1px solid #ddd;
+    top: 60px;
+    right: calc(50% - 70px);
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .address-card {
+    height: 100%;
+    position: relative;
+    border-radius: 12px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  .address-name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .default-badge {
+    font-size: 0.7rem;
+    background-color: #4caf50;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+  }
+  
+  .card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 16px;
+  }
+  
+  .order-accordion {
+    margin-bottom: 1rem !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  .order-id {
+    font-weight: 600;
+  }
+  
+  .order-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+  }
+  
+  .settings-section {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .settings-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .settings-options {
+    padding-left: 1rem;
+  }
