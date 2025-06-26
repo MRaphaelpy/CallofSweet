@@ -7,7 +7,9 @@ import {
     Typography,
     Box,
     IconButton,
-    Divider
+    Divider,
+    CircularProgress,
+    Badge
 } from '@mui/material';
 import {
     Add as AddIcon,
@@ -16,7 +18,21 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const CartItemsList = ({ items, onUpdateQuantity, onRemoveItem }) => {
+const CartItemsList = ({ items, onUpdateQuantity, onRemoveItem, loading }) => {
+    const [loadingItem, setLoadingItem] = React.useState(null);
+
+    const handleUpdateQuantity = (id, change) => {
+        setLoadingItem(id);
+        onUpdateQuantity(id, change).finally(() => {
+            setTimeout(() => setLoadingItem(null), 300);
+        });
+    };
+
+    const handleRemoveItem = (id) => {
+        setLoadingItem(id);
+        onRemoveItem(id);
+    };
+
     return (
         <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden' }}>
             <AnimatePresence>
@@ -28,7 +44,26 @@ const CartItemsList = ({ items, onUpdateQuantity, onRemoveItem }) => {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Card className="cart-item" sx={{ mb: 0.5, display: 'flex', borderRadius: 0, boxShadow: 'none' }}>
+                        <Card className="cart-item" sx={{ mb: 0.5, display: 'flex', borderRadius: 0, boxShadow: 'none', position: 'relative' }}>
+                            {(loading || loadingItem === item.id) && (
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'rgba(255,255,255,0.7)',
+                                        zIndex: 1
+                                    }}
+                                >
+                                    <CircularProgress size={24} />
+                                </Box>
+                            )}
+
                             <CardMedia
                                 component="img"
                                 sx={{ width: 120, height: 120, objectFit: 'cover' }}
@@ -48,26 +83,31 @@ const CartItemsList = ({ items, onUpdateQuantity, onRemoveItem }) => {
                                 <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                                     <IconButton
                                         size="small"
-                                        onClick={() => onUpdateQuantity(item.id, -1)}
+                                        onClick={() => handleUpdateQuantity(item.id, -1)}
                                         className="quantity-button"
+                                        disabled={loading || loadingItem === item.id || item.quantity <= 1}
                                     >
                                         <RemoveIcon fontSize="small" />
                                     </IconButton>
-                                    <Typography sx={{ mx: 2, minWidth: '20px', textAlign: 'center' }}>
-                                        {item.quantity}
-                                    </Typography>
+                                    <Badge
+                                        badgeContent={item.quantity}
+                                        color="primary"
+                                        sx={{ '& .MuiBadge-badge': { position: 'static', transform: 'none' } }}
+                                    />
                                     <IconButton
                                         size="small"
-                                        onClick={() => onUpdateQuantity(item.id, 1)}
+                                        onClick={() => handleUpdateQuantity(item.id, 1)}
                                         className="quantity-button"
+                                        disabled={loading || loadingItem === item.id}
                                     >
                                         <AddIcon fontSize="small" />
                                     </IconButton>
                                 </Box>
                                 <IconButton
                                     aria-label="delete"
-                                    onClick={() => onRemoveItem(item.id)}
+                                    onClick={() => handleRemoveItem(item.id)}
                                     className="delete-button"
+                                    disabled={loading || loadingItem === item.id}
                                 >
                                     <DeleteIcon />
                                 </IconButton>

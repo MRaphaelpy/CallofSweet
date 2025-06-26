@@ -564,3 +564,16 @@
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
 }
+.spinner {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  border: 6px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #9c27b0;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}

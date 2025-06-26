@@ -29,7 +29,7 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable int id) {
-        PaymentDTO paymentDTO = paymentService.getPaymentById(id);
+        PaymentDTO paymentDTO = paymentService.getPaymentById((long) id);
         return ResponseEntity.ok(paymentDTO);
     }
 
@@ -43,13 +43,13 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> updatePayment(
             @PathVariable int id,
             @Validated @RequestBody PaymentDTO paymentDTO) {
-        PaymentDTO updatedPayment = paymentService.updatePayment(id, paymentDTO);
+        PaymentDTO updatedPayment = paymentService.updatePayment((long) id, paymentDTO);
         return ResponseEntity.ok(updatedPayment);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable int id) {
-        paymentService.deletePayment(id);
+        paymentService.deletePayment((long) id);
         return ResponseEntity.noContent().build();
     }
 }

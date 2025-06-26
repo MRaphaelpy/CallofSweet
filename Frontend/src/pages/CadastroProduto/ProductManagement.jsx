@@ -237,7 +237,7 @@ const ProductManagement = () => {
                     )}
                 </Box>
 
-                {/* Modal de formulário para criar/editar produto */}
+         
                 <Dialog
                     open={formOpen}
                     onClose={handleFormClose}
@@ -254,7 +254,7 @@ const ProductManagement = () => {
                     </DialogContent>
                 </Dialog>
 
-                {/* Modal de visualização de detalhes do produto */}
+       
                 <Dialog
                     open={!!selectedProduct}
                     onClose={closeProductView}
@@ -346,7 +346,7 @@ const ProductManagement = () => {
                                         </Typography>
                                     </Grid>
 
-                                    {/* Seção de Avaliações */}
+                        
                                     {selectedProduct.reviews && selectedProduct.reviews.length > 0 && (
                                         <Grid item xs={12}>
                                             <Typography variant="h6" gutterBottom>
@@ -390,7 +390,7 @@ const ProductManagement = () => {
                     )}
                 </Dialog>
 
-                {/* Diálogo de confirmação de exclusão */}
+         
                 <Dialog
                     open={deleteDialogOpen}
                     onClose={() => setDeleteDialogOpen(false)}
@@ -411,7 +411,7 @@ const ProductManagement = () => {
                     </DialogActions>
                 </Dialog>
 
-                {/* Snackbar para notificações */}
+          
                 <Snackbar
                     open={snackbar.open}
                     autoHideDuration={6000}

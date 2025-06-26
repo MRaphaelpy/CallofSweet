@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
     Paper,
@@ -6,7 +7,8 @@ import {
     Stack,
     Divider,
     TextField,
-    Button
+    Button,
+    CircularProgress
 } from '@mui/material';
 import { motion } from 'framer-motion';
 
@@ -18,7 +20,8 @@ const OrderSummary = ({
     couponCode,
     onCouponChange,
     onApplyCoupon,
-    onCheckout
+    onCheckout,
+    loading = false
 }) => {
     return (
         <Paper elevation={3} className="order-summary" sx={{ p: 3, borderRadius: 3 }}>
@@ -52,9 +55,10 @@ const OrderSummary = ({
                 couponCode={couponCode}
                 onCouponChange={onCouponChange}
                 onApplyCoupon={onApplyCoupon}
+                loading={loading}
             />
 
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <motion.div whileHover={{ scale: loading ? 1.0 : 1.02 }} whileTap={{ scale: loading ? 1.0 : 0.98 }}>
                 <Button
                     variant="contained"
                     color="primary"
@@ -62,8 +66,10 @@ const OrderSummary = ({
                     size="large"
                     onClick={onCheckout}
                     className="checkout-button"
+                    disabled={loading || subtotal <= 0}
+                    startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                    Finalizar Compra
+                    {loading ? "Processando..." : "Finalizar Compra"}
                 </Button>
             </motion.div>
         </Paper>
@@ -80,25 +86,67 @@ const SummaryRow = ({ label, value, variant = "body1", color = "textPrimary", is
     </Stack>
 );
 
-const CouponSection = ({ couponCode, onCouponChange, onApplyCoupon }) => (
-    <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: 'flex', mb: 2 }}>
-            <TextField
-                size="small"
-                label="Cupom de desconto"
-                variant="outlined"
-                value={couponCode}
-                onChange={(e) => onCouponChange(e.target.value)}
-                sx={{ flexGrow: 1, mr: 1 }}
-            />
-            <Button
-                variant="outlined"
-                onClick={() => onApplyCoupon(couponCode)}
-            >
-                Aplicar
-            </Button>
-        </Box>
-    </Box>
+const CouponSection = ({ 
+  couponCode, 
+  onCouponChange, 
+  onApplyCoupon, 
+  loading,
+  appliedCoupon 
+}) => (
+  <Box sx={{ mb: 3 }}>
+    {appliedCoupon ? (
+      <Paper
+        sx={{
+          p: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderRadius: 2,
+          bgcolor: 'success.light',
+          color: 'success.contrastText',
+          mb: 2
+        }}
+      >
+        <Typography variant="body2" fontWeight="500">
+          Cupom {appliedCoupon} aplicado!
+        </Typography>
+        <Button
+          size="small"
+          onClick={() => {
+            onCouponChange('');
+            onApplyCoupon(''); 
+          }}
+          sx={{
+            color: 'inherit',
+            textTransform: 'none',
+            fontSize: '0.75rem'
+          }}
+        >
+          Remover
+        </Button>
+      </Paper>
+    ) : (
+      <Box sx={{ display: 'flex', mb: 2 }}>
+        <TextField
+          size="small"
+          label="Cupom de desconto"
+          variant="outlined"
+          value={couponCode}
+          onChange={(e) => onCouponChange(e.target.value)}
+          sx={{ flexGrow: 1, mr: 1 }}
+          disabled={loading}
+          placeholder="Ex: MARCINHO"
+        />
+        <Button
+          variant="outlined"
+          onClick={() => onApplyCoupon(couponCode)}
+          disabled={loading || !couponCode.trim()}
+        >
+          Aplicar
+        </Button>
+      </Box>
+    )}
+  </Box>
 );
 
 export default OrderSummary;

@@ -61,7 +61,7 @@ export const updateProduct = async (id, productData) => {
 
         const formattedData = {
             ...productData,
-            active: Boolean(productData.active) // Corrigido para active
+            active: Boolean(productData.active) 
         };
 
         console.log("Dados a serem enviados para API (update):", formattedData);

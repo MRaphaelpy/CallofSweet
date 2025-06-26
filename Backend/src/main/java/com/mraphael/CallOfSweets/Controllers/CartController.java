@@ -1,6 +1,7 @@
 package com.mraphael.CallOfSweets.Controllers;
 
 import com.mraphael.CallOfSweets.DTOs.CartDTO;
+import com.mraphael.CallOfSweets.Exceptions.ResourceNotFoundException;
 import com.mraphael.CallOfSweets.Services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,15 @@ public class CartController {
     public ResponseEntity<Void> deleteCart(@PathVariable int id) {
         cartService.deleteCart(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CartDTO> getCartByUserId(@PathVariable Long userId) {
+        try {
+            CartDTO cart = cartService.getCartByUserId(userId);
+            return ResponseEntity.ok(cart);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface PaymentService {
     PaymentDTO createPayment(PaymentDTO paymentDTO);
-    PaymentDTO getPaymentById(int id);
+    PaymentDTO getPaymentById(Long id);
     List<PaymentDTO> getAllPayments();
-    PaymentDTO updatePayment(int id, PaymentDTO paymentDTO);
-    void deletePayment(int id);
+    PaymentDTO updatePayment(Long id, PaymentDTO paymentDTO);
+    void deletePayment(Long id);
 }

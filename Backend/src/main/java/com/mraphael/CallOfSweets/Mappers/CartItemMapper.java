@@ -14,12 +14,26 @@ public class CartItemMapper {
     private ModelMapper modelMapper;
 
     public CartItemDTO toDTO(CartItem cartItem) {
-        CartItemDTO dto = modelMapper.map(cartItem, CartItemDTO.class);
+        CartItemDTO dto = new CartItemDTO();
 
-        // Adicionar campos informativos adicionais
+        dto.setId(cartItem.getId());
+        dto.setQuantity(cartItem.getQuantity());
+        dto.setSubtotal(cartItem.getSubtotal());
+
+        if (cartItem.getCart() != null) {
+            dto.setCartId(cartItem.getCart().getId());
+        }
+
         if (cartItem.getVariation() != null) {
+            dto.setVariationId(cartItem.getVariation().getId());
+            dto.setPrice(cartItem.getVariation().getPrice());
+
             if (cartItem.getVariation().getProduct() != null) {
-                dto.setProductName(cartItem.getVariation().getProduct().getName());
+                var product = cartItem.getVariation().getProduct();
+                dto.setProductId(product.getId());
+                dto.setName(product.getName());
+                dto.setImage(product.getImageUrl());
+                dto.setName(product.getName());
             }
 
             String details = "";
@@ -36,28 +50,36 @@ public class CartItemMapper {
     }
 
     public CartItem toEntity(CartItemDTO cartItemDTO) {
-        CartItem entity = modelMapper.map(cartItemDTO, CartItem.class);
+        CartItem entity = new CartItem();
+        entity.setId(cartItemDTO.getId());
+        entity.setQuantity(cartItemDTO.getQuantity());
 
-        // Garantir que o subtotal seja do tipo BigDecimal
-        if (cartItemDTO.getSubtotal() != null) {
-            entity.setSubtotal(BigDecimal.valueOf(cartItemDTO.getSubtotal().doubleValue()));
+        if (cartItemDTO.getPrice() != null && cartItemDTO.getQuantity() != null) {
+            BigDecimal subtotal = cartItemDTO.getPrice().multiply(new BigDecimal(cartItemDTO.getQuantity()));
+            entity.setSubtotal(subtotal);
+        } else if (cartItemDTO.getSubtotal() != null) {
+            entity.setSubtotal(cartItemDTO.getSubtotal());
         }
-
         return entity;
     }
-    // CartItemMapper - add this method to your class
+
     public void map(CartItemDTO cartItemDTO, CartItem cartItem) {
+
         var variation = cartItem.getVariation();
         var cart = cartItem.getCart();
 
-        modelMapper.map(cartItemDTO, cartItem);
 
+        if (cartItemDTO.getQuantity() != null) {
+            cartItem.setQuantity(cartItemDTO.getQuantity());
+        }
+
+        if (cartItemDTO.getPrice() != null && cartItemDTO.getQuantity() != null) {
+            BigDecimal subtotal = cartItemDTO.getPrice().multiply(new BigDecimal(cartItemDTO.getQuantity()));
+            cartItem.setSubtotal(subtotal);
+        } else if (cartItemDTO.getSubtotal() != null) {
+            cartItem.setSubtotal(cartItemDTO.getSubtotal());
+        }
         cartItem.setVariation(variation);
         cartItem.setCart(cart);
-
-        // Garantir que o subtotal seja do tipo BigDecimal
-        if (cartItemDTO.getSubtotal() != null) {
-            cartItem.setSubtotal(BigDecimal.valueOf(cartItemDTO.getSubtotal().doubleValue()));
-        }
     }
 }

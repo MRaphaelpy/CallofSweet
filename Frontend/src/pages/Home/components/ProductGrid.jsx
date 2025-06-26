@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Card,
@@ -10,24 +10,50 @@ import {
   Box,
   IconButton,
   Chip,
-  Rating
+  Rating,
+  CircularProgress
 } from '@mui/material';
 import {
   Favorite as FavoriteIcon,
   ShoppingBasket as CartIcon,
-  LocalCafe as CoffeeIcon
+  LocalCafe as CoffeeIcon,
+  AddShoppingCart as AddCartIcon,
+  Check as CheckIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { useCart } from '../../../contexts/CartContext';
 import './ProductGrid.css';
 
 const ProductGrid = ({ products }) => {
+  const { addToCart, loading: cartLoading } = useCart();
+  const [addedItemId, setAddedItemId] = useState(null);
+
   if (!products || products.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', my: 4 }}>
-        <Typography>No products available.</Typography>
+        <Typography>Produto não encontrado</Typography>
       </Box>
     );
   }
+
+  const handleAddToCart = (product) => {
+    
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.imageUrl ||
+        `https://picsum.photos/seed/${product.id || product.name?.replace(/\s+/g, '')}/500/500`
+    };
+
+    
+    addToCart(cartItem);
+
+    
+    setAddedItemId(product.id);
+    setTimeout(() => setAddedItemId(null), 2000);
+  };
 
   return (
     <Grid container spacing={4}>
@@ -45,7 +71,7 @@ const ProductGrid = ({ products }) => {
             <Card className="product-card">
               <Box position="relative">
                 <Box className="top-icons">
-                  <div></div> 
+                  <div></div>
                   <IconButton className="favorite-button" aria-label="add to favorites">
                     <FavoriteIcon color="secondary" />
                   </IconButton>
@@ -56,14 +82,11 @@ const ProductGrid = ({ products }) => {
                     component="img"
                     image={
                       product.imageUrl ||
-                      
                       `https://picsum.photos/seed/${product.id || product.name?.replace(/\s+/g, '')}/500/500`
                     }
                     alt={product.name}
                     className="product-image"
                   />
-
-
                 </motion.div>
               </Box>
 
@@ -126,12 +149,28 @@ const ProductGrid = ({ products }) => {
                   <Button
                     variant="contained"
                     fullWidth
-                    color="primary"
-                    disabled={!product.active}
-                    startIcon={product.active ? <CartIcon /> : <CoffeeIcon />}
+                    color={addedItemId === product.id ? "success" : "primary"}
+                    disabled={!product.active || (cartLoading && addedItemId === product.id)}
+                    startIcon={
+                      cartLoading && addedItemId === product.id ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : addedItemId === product.id ? (
+                        <CheckIcon />
+                      ) : product.active ? (
+                        <AddCartIcon />
+                      ) : (
+                        <CoffeeIcon />
+                      )
+                    }
                     className="add-button"
+                    onClick={() => product.active && handleAddToCart(product)}
                   >
-                    {product.active ? 'Adicionar' : 'Esgotado'}
+                    {addedItemId === product.id
+                      ? 'Adicionado!'
+                      : product.active
+                        ? 'Adicionar'
+                        : 'Esgotado'
+                    }
                   </Button>
                 </motion.div>
               </CardActions>

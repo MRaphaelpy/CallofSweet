@@ -15,6 +15,8 @@ import UserRegistrationPage from '../src/pages/UserRegistrationPage/UserRegistra
 import { Login } from '@mui/icons-material';
 import LoginPage from './pages/Login/LoginPage';
 import CadastroProduto from '../src/pages/CadastroProduto/ProductManagement';
+import { CartProvider } from './contexts/CartContext';
+import OrderConfirmation from './components/Order/OrderConfirmation';
 
 function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -36,28 +38,31 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <div className="App">
-          <Header toggleDrawer={toggleDrawer} />
-          <SideDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+      <CartProvider>
+        <CssBaseline />
+        <BrowserRouter>
+          <div className="App">
+            <Header toggleDrawer={toggleDrawer} />
+            <SideDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-          <main>
-            <Routes>
-              <Route path="/register" element={<UserRegistrationPage></UserRegistrationPage>} />
-              <Route path="/" element={<Home />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/profile" element={<Profile onThemeChange={handleThemeChange} />} />
-              <Route path="/payment" element={<PaymentPage></PaymentPage>} />
-              <Route path="/checkout" element={<CheckoutPage></CheckoutPage>} />
-              <Route path="/login" element={<LoginPage></LoginPage>} />
-              <Route path = "CadastroProduto" element={<CadastroProduto></CadastroProduto>} />
-            </Routes>
-          </main>
+            <main>
+              <Routes>
+                <Route path="/register" element={<UserRegistrationPage></UserRegistrationPage>} />
+                <Route path="/" element={<Home />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/profile" element={<Profile onThemeChange={handleThemeChange} />} />
+                <Route path="/payment" element={<PaymentPage></PaymentPage>} />
+                <Route path="/checkout" element={<CheckoutPage></CheckoutPage>} />
+                <Route path="/login" element={<LoginPage></LoginPage>} />
+                <Route path="CadastroProduto" element={<CadastroProduto></CadastroProduto>} />
+                <Route path="/order-confirmation" element={<OrderConfirmation></OrderConfirmation>} />
+              </Routes>
+            </main>
 
-          <Footer />
-        </div>
-      </BrowserRouter>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </CartProvider>
     </ThemeProvider>
   );
 }

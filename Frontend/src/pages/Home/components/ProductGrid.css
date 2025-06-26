@@ -1,4 +1,4 @@
-/* ProductGrid.css - Versão corrigida e unificada */
+
 
 .product-card {
   height: 500px;
@@ -121,7 +121,7 @@
   box-shadow: 0 8px 16px rgba(156, 39, 176, 0.35) !important;
 }
 
-/* Ajustes para garantir altura fixa */
+
 .brand-text {
   overflow: hidden;
   white-space: nowrap;

@@ -23,26 +23,31 @@
   color: white;
   font-family: 'Pacifico', cursive;
   letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .header-avatar {
-  background-color: #f06292;
-  width: 45px;
-  height: 45px;
+  background-color: #f06292 !important;
+  width: 45px !important;
+  height: 45px !important;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .header-greeting {
   font-style: italic;
   color: rgba(255, 255, 255, 0.9);
+  display: block;
+  margin-top: -2px;
 }
 
 .search-field {
-  transition: all 0.3s ease;
+  transition: width 0.3s ease;
+  max-width: 50%;
 }
 
 .search-field.focused {
   width: 340px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .search-field .MuiOutlinedInput-root {
@@ -60,17 +65,79 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.search-field .MuiSvgIcon-root {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .header-actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
+.header-actions .MuiIconButton-root {
+  color: white;
+}
+
 .menu-button {
   margin-right: 8px;
   background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .menu-button:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+@media (max-width: 900px) {
+  .search-field {
+    max-width: 40%;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-field {
+    max-width: 30%;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-logo > .MuiBox-root {
+    display: none;
+  }
+  
+  .search-field {
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-field {
+    display: none;
+  }
+  
+  .header-actions {
+    gap: 4px;
+  }
+}
+
+
+.MuiMenu-paper {
+  margin-top: 8px !important;
+  background-color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  overflow: visible !important;
+}
+
+.MuiMenu-paper::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  transform: rotate(45deg);
 }

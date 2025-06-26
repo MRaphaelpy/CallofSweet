@@ -64,7 +64,7 @@ const ProductForm = ({ product, onSubmit, loading, mode }) => {
             [name]: newValue
         });
 
-        
+
         if (errors[name]) {
             setErrors({
                 ...errors,
@@ -294,7 +294,7 @@ const ProductForm = ({ product, onSubmit, loading, mode }) => {
                             )}
                         </Grid>
 
-                        {/* Exibir variações existentes se estiver editando */}
+
                         {mode === 'edit' && product?.variations && product.variations.length > 0 && (
                             <Grid item xs={12}>
                                 <Typography variant="subtitle1" gutterBottom>
@@ -314,7 +314,7 @@ const ProductForm = ({ product, onSubmit, loading, mode }) => {
                             </Grid>
                         )}
 
-                        {/* Exibir avaliações existentes se estiver editando */}
+
                         {mode === 'edit' && product?.reviews && product.reviews.length > 0 && (
                             <Grid item xs={12}>
                                 <Typography variant="subtitle1" gutterBottom>

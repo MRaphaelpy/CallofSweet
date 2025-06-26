@@ -1,4 +1,4 @@
-// src/components/Header.jsx
+
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,17 @@ import {
   Avatar,
   useScrollTrigger,
   Slide,
-  Tooltip
+  Tooltip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -22,18 +32,26 @@ import {
   Favorite as FavoriteIcon,
   PersonOutline as UserIcon,
   Menu as MenuIcon,
-  Cake as CakeIcon
+  Cake as CakeIcon,
+  Logout as LogoutIcon,
+  Settings as SettingsIcon,
+  History as HistoryIcon
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../../contexts/CartContext';
 import './Header.css';
 
-const Header = ({ toggleDrawer, cartItems = 3 }) => {
+const Header = ({ toggleDrawer }) => {
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [showGreeting, setShowGreeting] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 100 });
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     setShowGreeting(true);
@@ -41,11 +59,62 @@ const Header = ({ toggleDrawer, cartItems = 3 }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleUserIconClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfileClick = () => {
+    handleClose();
+    navigate('/profile');
+  };
+
+  const handleLogoutClick = () => {
+    handleClose();
+    setLogoutDialogOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    
+    localStorage.removeItem('userData');
+    
+    localStorage.removeItem('cart');
+    
+    sessionStorage.clear();
+    setLogoutDialogOpen(false);
+    window.location.href = '/'; 
+  };
+
+  const handleLogoutCancel = () => {
+    setLogoutDialogOpen(false);
+  };
+
+  const isUserLoggedIn = () => {
+    return localStorage.getItem('userData') !== null;
+  };
+
+  const getUserName = () => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.name || user.email || 'Usuário';
+    }
+    return '';
+  };
+
+  const getUserInitial = () => {
+    const name = getUserName();
+    return name ? name.charAt(0).toUpperCase() : 'U';
+  };
+
   return (
     <Slide appear={false} direction="down" in={!trigger}>
       <AppBar position="sticky" elevation={4} className="header">
         <Toolbar className="header-toolbar">
-          {/* Menu + Logo */}
+          
           <Box className="logo-container">
             <motion.div whileHover={{ rotate: 90 }} whileTap={{ scale: 0.9 }}>
               <IconButton onClick={toggleDrawer(true)} className="menu-button">
@@ -83,7 +152,7 @@ const Header = ({ toggleDrawer, cartItems = 3 }) => {
             </motion.div>
           </Box>
 
-          {/* Search */}
+   
           <motion.div
             className={`search-field ${isSearchFocused ? 'focused' : ''}`}
             initial={{ width: 280 }}
@@ -114,12 +183,18 @@ const Header = ({ toggleDrawer, cartItems = 3 }) => {
             />
           </motion.div>
 
-          {/* Ações */}
+         
           <Box className="header-actions">
-            <Tooltip title="Meu Perfil">
+            <Tooltip title={isUserLoggedIn() ? "Meu Perfil" : "Entrar"}>
               <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}>
-                <IconButton onClick={() => navigate('/profile')}>
-                  <UserIcon />
+                <IconButton onClick={handleUserIconClick}>
+                  {isUserLoggedIn() ? (
+                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.9rem' }}>
+                      {getUserInitial()}
+                    </Avatar>
+                  ) : (
+                    <UserIcon />
+                  )}
                 </IconButton>
               </motion.div>
             </Tooltip>
@@ -135,7 +210,7 @@ const Header = ({ toggleDrawer, cartItems = 3 }) => {
             <Tooltip title="Carrinho">
               <motion.div whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}>
                 <IconButton onClick={() => navigate('/cart')}>
-                  <Badge badgeContent={cartItems} color="secondary">
+                  <Badge badgeContent={cartCount} color="secondary">
                     <CartIcon />
                   </Badge>
                 </IconButton>
@@ -143,6 +218,124 @@ const Header = ({ toggleDrawer, cartItems = 3 }) => {
             </Tooltip>
           </Box>
         </Toolbar>
+
+
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 3,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.1))',
+              mt: 1.5,
+              borderRadius: 2,
+              minWidth: 200,
+              '& .MuiMenuItem-root': {
+                px: 2,
+                py: 1.5
+              },
+              '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          {isUserLoggedIn() ? [
+            <Box key="user-name" sx={{ px: 2, py: 1 }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {getUserName()}
+              </Typography>
+            </Box>,
+            <Divider key="divider-1" />,
+            <MenuItem key="profile" onClick={handleProfileClick}>
+              <ListItemIcon>
+                <UserIcon fontSize="small" />
+              </ListItemIcon>
+              Meu Perfil
+            </MenuItem>,
+            <MenuItem key="orders" onClick={() => { handleClose(); navigate('/orders'); }}>
+              <ListItemIcon>
+                <HistoryIcon fontSize="small" />
+              </ListItemIcon>
+              Meus Pedidos
+            </MenuItem>,
+            <MenuItem key="settings" onClick={() => { handleClose(); navigate('/settings'); }}>
+              <ListItemIcon>
+                <SettingsIcon fontSize="small" />
+              </ListItemIcon>
+              Configurações
+            </MenuItem>,
+            <Divider key="divider-2" />,
+            <MenuItem key="logout" onClick={handleLogoutClick} sx={{ color: 'error.main' }}>
+              <ListItemIcon>
+                <LogoutIcon fontSize="small" color="error" />
+              </ListItemIcon>
+              Sair da Conta
+            </MenuItem>
+          ] : [
+            <MenuItem key="login" onClick={() => { handleClose(); navigate('/login'); }}>
+              <ListItemIcon>
+                <UserIcon fontSize="small" />
+              </ListItemIcon>
+              Entrar
+            </MenuItem>,
+            <MenuItem key="register" onClick={() => { handleClose(); navigate('/register'); }}>
+              <ListItemIcon>
+                <UserIcon fontSize="small" />
+              </ListItemIcon>
+              Cadastrar
+            </MenuItem>
+          ]}
+        </Menu>
+
+      
+        <Dialog
+          open={logoutDialogOpen}
+          onClose={handleLogoutCancel}
+          PaperProps={{
+            sx: { borderRadius: 3, p: 1 }
+          }}
+        >
+          <DialogTitle>Sair da conta?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Tem certeza que deseja sair? Seus dados de navegação e do carrinho serão removidos deste dispositivo.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <Button onClick={handleLogoutCancel} sx={{ textTransform: 'none' }}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleLogoutConfirm}
+              variant="contained"
+              color="error"
+              sx={{
+                textTransform: 'none',
+                borderRadius: 2,
+                px: 3
+              }}
+            >
+              Sair
+            </Button>
+          </DialogActions>
+        </Dialog>
+
       </AppBar>
     </Slide>
   );

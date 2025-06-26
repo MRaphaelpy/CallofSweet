@@ -10,4 +10,5 @@ public interface CartService {
     List<CartDTO> getAllCarts();
     CartDTO updateCart(int id, CartDTO cartDTO);
     void deleteCart(int id);
+    CartDTO getCartByUserId(Long userId);
 }

@@ -15,4 +15,5 @@ public class PaymentDTO {
     private String transactionId;
     private BigDecimal amount;
     private String status;
+    private Object cardDetails;
 }

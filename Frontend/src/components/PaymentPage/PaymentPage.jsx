@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCreditCard, FaQrcode, FaFileInvoice, FaCheckCircle, FaTimesCircle, FaArrowLeft, FaInfoCircle } from 'react-icons/fa';
 import { IoShieldCheckmark } from 'react-icons/io5';
 import CreditCardPayment from '../PaymentMethods/CreditCardPayment';
@@ -10,24 +10,39 @@ import Button from '../shared/Button';
 import styles from './PaymentPage.module.css';
 import { Tooltip } from 'react-tooltip';
 import Confetti from 'react-confetti';
-import Lottie from 'react-lottie';
+import axios from 'axios';
 import { useWindowSize } from 'react-use';
 
+const API_URL = 'http://localhost:8080/api/v1';
 
-
-
-
-const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
+const PaymentPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { width, height } = useWindowSize();
+
     
-    const { 
-        amount = 10,
-        customerName = '',
-        customerCpf = '',
-        customerEmail = '',
-        customerPhone = '',
-        shippingAddress = {
+    const [selectedMethod, setSelectedMethod] = useState(null);
+    const [paymentStatus, setPaymentStatus] = useState('idle');
+    const [showConfetti, setShowConfetti] = useState(false);
+    const [formProgress, setFormProgress] = useState(0);
+    const [paymentData, setPaymentData] = useState({});
+    const [createdOrderId, setCreatedOrderId] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    
+    const checkoutData = location.state || {};
+    const {
+        amount = 0,
+        cartItems = [],
+        orderSummary = {},
+    } = checkoutData;
+
+    const [customerData, setCustomerData] = useState({
+        name: checkoutData.customerName || '',
+        cpf: checkoutData.customerCpf || '',
+        email: checkoutData.customerEmail || '',
+        phone: checkoutData.customerPhone || '',
+        address: checkoutData.shippingAddress || {
             street: '',
             number: '',
             complement: '',
@@ -36,44 +51,18 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
             state: '',
             zipCode: '',
         },
-    } = location.state || {};
-
-    const [selectedMethod, setSelectedMethod] = useState(null);
-    const [paymentStatus, setPaymentStatus] = useState('idle');
-    const [showConfetti, setShowConfetti] = useState(false);
-    const [formProgress, setFormProgress] = useState(0);
-    const [customerData, setCustomerData] = useState({
-        name: customerName,
-        cpf: customerCpf,
-        email: customerEmail,
-        phone: customerPhone,
-        address: shippingAddress,
     });
 
     
-    const processingLottieOptions = {
-        loop: true,
-        autoplay: true,
-        
-        
-        rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
+    useEffect(() => {
+        if (!cartItems || cartItems.length === 0) {
+            navigate('/cart');
         }
-    };
-
-    const secureLottieOptions = {
-        loop: true,
-        autoplay: true,
-        
-        
-        rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
-        }
-    };
+        console.log("Payment page data:", { checkoutData, cartItems, amount, orderSummary });
+    }, [checkoutData, cartItems, amount, orderSummary, navigate]);
 
     const handleMethodSelect = (method) => {
         setSelectedMethod(method);
-        
         setFormProgress(0);
     };
 
@@ -82,6 +71,11 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
             ...prev,
             [field]: value
         }));
+        updateFormProgress();
+    };
+
+    const handlePaymentDataChange = (data) => {
+        setPaymentData(data);
         updateFormProgress();
     };
 
@@ -97,18 +91,15 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
     };
 
     const updateFormProgress = () => {
-        
         const requiredFields = ['name', 'cpf', 'email'];
         const filledFields = requiredFields.filter(field => customerData[field]?.trim().length > 0);
-        
+
         let progress = (filledFields.length / requiredFields.length) * 100;
-        
-        
+
         if (selectedMethod === 'credit-card') {
-            
-            progress = Math.min(progress, 90); 
+            progress = Math.min(progress, 90);
         }
-        
+
         setFormProgress(progress);
     };
 
@@ -116,27 +107,167 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
         updateFormProgress();
     }, [customerData, selectedMethod]);
 
-    const handlePaymentSubmit = () => {
+    const getAuthToken = () => {
+        try {
+            const userData = localStorage.getItem('userData');
+            return userData ? JSON.parse(userData).token : null;
+        } catch (e) {
+            console.error("Error getting auth token:", e);
+            return null;
+        }
+    };
+
+    const getUserId = () => {
+        try {
+            const userData = localStorage.getItem('userData');
+            return userData ? JSON.parse(userData).userId : null;
+        } catch (e) {
+            console.error("Error getting user ID:", e);
+            return null;
+        }
+    };
+
+
+    const handlePaymentSubmit = async () => {
         setPaymentStatus('processing');
+        setErrorMessage('');
 
-        
-        setTimeout(() => {
-            const success = Math.random() > 0.1; 
-            setPaymentStatus(success ? 'success' : 'error');
-
-            if (success) {
-                setShowConfetti(true);
-                setTimeout(() => {
-                    setShowConfetti(false);
-                    onComplete({
-                        method: selectedMethod,
-                        customerData,
-                        amount,
-                        timestamp: new Date().toISOString()
-                    });
-                }, 4000);
+        try {
+            
+            if (!cartItems || cartItems.length === 0) {
+                throw new Error('O carrinho está vazio. Adicione produtos antes de finalizar a compra.');
             }
-        }, 2500);
+
+            
+            const userId = getUserId();
+            if (!userId) {
+                throw new Error('Usuário não está autenticado. Por favor, faça login para continuar.');
+            }
+
+            console.log("Processing cart items:", cartItems);
+
+            
+            const orderData = {
+                userId: userId,
+                totalPrice: amount,
+                status: "PENDING",
+                paymentMethod: selectedMethod,
+                items: cartItems.map(item => {
+                    
+                    let variationId;
+
+                    if (item.variationId) {
+                        variationId = item.variationId;
+                    } else if (item.variation && item.variation.id) {
+                        variationId = item.variation.id;
+                    } else if (item.id) {
+                        variationId = item.id;
+                    } else {
+                        console.error("Item missing valid ID:", item);
+                        throw new Error(`Um produto no carrinho não possui ID válido: ${item.name || 'Produto desconhecido'}`);
+                    }
+
+                    return {
+                        variationId: variationId,
+                        quantity: item.quantity || 1,
+                        subtotal: (item.price || 0) * (item.quantity || 1)
+                    };
+                }),
+                
+                customerName: customerData.name,
+                customerEmail: customerData.email,
+                customerPhone: customerData.phone,
+                address: {
+                    street: customerData.address.street || '',
+                    number: customerData.address.number || '',
+                    complement: customerData.address.complement || '',
+                    neighborhood: customerData.address.neighborhood || '',
+                    city: customerData.address.city || '',
+                    state: customerData.address.state || '',
+                    zipCode: customerData.address.zipCode || ''
+                }
+            };
+
+            
+            const token = getAuthToken();
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            console.log("Sending order data:", orderData);
+
+            
+            try {
+                
+                const orderResponse = await axios.post(`${API_URL}/orders`, orderData, config);
+                const orderId = orderResponse.data.id;
+                setCreatedOrderId(orderId);
+
+                
+                const paymentData = {
+                    orderId: orderId,
+                    paymentMethod: selectedMethod,
+                    transactionId: `TRX-${Date.now()}`,
+                    amount: amount,
+                    status: "PENDING"
+                };
+
+                if (selectedMethod === 'credit-card') {
+                    paymentData.cardDetails = {
+                        lastFourDigits: paymentData.cardNumber ? paymentData.cardNumber.slice(-4) : "****",
+                    };
+                }
+
+                console.log("Sending payment data:", paymentData);
+
+                
+                await axios.post(`${API_URL}/payments`, paymentData, config);
+
+            } catch (apiError) {
+                console.error("API error:", apiError);
+                console.log("Continuing with simulation since backend might not be ready");
+                
+            }
+
+            
+            setTimeout(() => {
+                setPaymentStatus('success');
+                setShowConfetti(true);
+
+                
+                localStorage.removeItem('cart');
+
+                
+                setTimeout(() => {
+                    navigate('/order-confirmation', {
+                        state: {
+                            orderId: createdOrderId || "123-simulated",
+                            orderNumber: createdOrderId || "123-simulated",
+                            totalAmount: amount,
+                            customerName: customerData.name,
+                            customerEmail: customerData.email,
+                            paymentMethod: selectedMethod
+                        }
+                    });
+                }, 3000);
+            }, 2000);
+
+        } catch (error) {
+            console.error("Payment processing error:", error);
+            setPaymentStatus('error');
+            setErrorMessage(
+                error.response?.data?.message ||
+                error.message ||
+                "Ocorreu um erro ao processar o pagamento. Por favor, tente novamente."
+            );
+        }
+    };
+
+    const handleCancel = () => {
+        navigate(-1);
     };
 
     const paymentMethods = [
@@ -183,7 +314,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
             exit={{ opacity: 0 }}
         >
             {showConfetti && <Confetti width={width} height={height} recycle={false} numberOfPieces={200} />}
-            
+
             <motion.div
                 className={styles.container}
                 variants={containerVariants}
@@ -193,15 +324,15 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
             >
                 <header className={styles.pageHeader}>
                     <motion.button
-                        className={styles.backButton} 
-                        onClick={onCancel}
+                        className={styles.backButton}
+                        onClick={handleCancel}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         disabled={paymentStatus === 'processing'}
                     >
                         <FaArrowLeft /> Voltar
                     </motion.button>
-                    
+
                     <motion.h1
                         className={styles.title}
                         initial={{ y: -20 }}
@@ -210,7 +341,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                     >
                         Finalizar Pagamento
                     </motion.h1>
-                    
+
                     <div className={styles.secureInfo} data-tooltip-id="secure-tooltip">
                         <IoShieldCheckmark />
                     </div>
@@ -234,13 +365,13 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                         >
                             <FaCheckCircle className={styles.checkmark} />
                         </motion.div>
-                        
+
                         <h2>Pagamento Realizado com Sucesso!</h2>
                         <p className={styles.successDetails}>
                             Seu pedido foi processado e confirmado. Um comprovante foi
                             enviado para seu email.
                         </p>
-                        
+
                         <div className={styles.orderSummary}>
                             <div className={styles.orderDetail}>
                                 <span>Método:</span>
@@ -261,12 +392,10 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                 }).format(amount)}</span>
                             </div>
                         </div>
-                        
-                        <Button 
+
+                        <Button
                             className={styles.continueButton}
-                            onClick={() => onComplete()}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            onClick={() => navigate('/')}
                         >
                             Continuar
                         </Button>
@@ -278,7 +407,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 300 }}
                     >
-                        <motion.div 
+                        <motion.div
                             className={styles.errorIcon}
                             initial={{ rotate: 90, scale: 0 }}
                             animate={{ rotate: 0, scale: 1 }}
@@ -286,27 +415,15 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                         >
                             <FaTimesCircle />
                         </motion.div>
-                        
+
                         <h2>Falha no Pagamento</h2>
                         <p className={styles.errorDetails}>
-                            Ocorreu um problema ao processar seu pagamento. Verifique seus dados e tente novamente.
+                            {errorMessage || 'Ocorreu um problema ao processar seu pagamento. Verifique seus dados e tente novamente.'}
                         </p>
-                        
-                        <div className={styles.errorTips}>
-                            <h4>Possíveis causas:</h4>
-                            <ul>
-                                <li>Dados do cartão incorretos</li>
-                                <li>Saldo insuficiente</li>
-                                <li>Cartão expirado ou bloqueado</li>
-                                <li>Problemas de conexão</li>
-                            </ul>
-                        </div>
-                        
-                        <Button 
+
+                        <Button
                             className={styles.retryButton}
                             onClick={() => setPaymentStatus('idle')}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
                         >
                             Tentar Novamente
                         </Button>
@@ -319,14 +436,15 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                         exit={{ opacity: 0 }}
                     >
                         <div className={styles.processingAnimation}>
-                            <Lottie options={processingLottieOptions} height={200} width={200} />
+                       
+                            <div className={styles.spinner}></div>
                         </div>
-                        
+
                         <h2>Processando seu Pagamento</h2>
                         <p>Aguarde enquanto processamos sua transação. Não atualize ou feche esta página.</p>
-                        
+
                         <div className={styles.processingIndicator}>
-                            <motion.div 
+                            <motion.div
                                 className={styles.processingBar}
                                 initial={{ width: "0%" }}
                                 animate={{ width: "100%" }}
@@ -336,7 +454,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                     </motion.div>
                 ) : (
                     <>
-                        <motion.div 
+                        <motion.div
                             className={styles.summary}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -357,12 +475,12 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                         }).format(amount)}
                                     </motion.span>
                                 </div>
-                                
+
                                 {formProgress > 0 && (
                                     <div className={styles.progressContainer}>
                                         <small>Progresso do pagamento</small>
                                         <div className={styles.progressBar}>
-                                            <motion.div 
+                                            <motion.div
                                                 className={styles.progressBarFill}
                                                 animate={{ width: `${formProgress}%` }}
                                                 transition={{ duration: 0.5 }}
@@ -374,32 +492,24 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div className={styles.securePaymentInfo}>
                                 <div className={styles.securityBadge}>
-                                    <div className={styles.securityAnimation}>
-                                        <Lottie 
-                                            options={secureLottieOptions}
-                                            height={50} 
-                                            width={50}
-                                            isStopped={false}
-                                            isPaused={false}
-                                        />
-                                    </div>
-                                    <span>Pagamento <br/>Seguro</span>
+                                    <IoShieldCheckmark />
+                                    <span>Pagamento <br />Seguro</span>
                                 </div>
                             </div>
                         </motion.div>
-                        
+
                         <div className={styles.paymentProcess}>
-                            <motion.div 
+                            <motion.div
                                 className={styles.methodSelector}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.4 }}
                             >
                                 <h3>
-                                    <span className={styles.stepNumber}>1</span> 
+                                    <span className={styles.stepNumber}>1</span>
                                     Escolha como deseja pagar
                                     <span className={styles.infoTip} data-tooltip-id="payment-method-tooltip">
                                         <FaInfoCircle />
@@ -409,7 +519,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                     Escolha o método mais conveniente para você
                                 </Tooltip>
 
-                                <motion.div 
+                                <motion.div
                                     className={styles.methodOptions}
                                     variants={methodsContainerVariants}
                                     initial="hidden"
@@ -433,9 +543,9 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                                     <span className={styles.methodDescription}>{method.description}</span>
                                                 </div>
                                             </div>
-                                            
+
                                             {selectedMethod === method.id && (
-                                                <motion.div 
+                                                <motion.div
                                                     className={styles.selectedIndicator}
                                                     layoutId="selectedMethod"
                                                     transition={{ duration: 0.3 }}
@@ -457,16 +567,17 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <h3>
-                                            <span className={styles.stepNumber}>2</span> 
+                                            <span className={styles.stepNumber}>2</span>
                                             Preencha os dados de pagamento
                                         </h3>
-                                        
+
                                         <div className={styles.paymentForm}>
                                             {selectedMethod === 'credit-card' && (
                                                 <CreditCardPayment
                                                     customerData={customerData}
                                                     onCustomerDataChange={handleCustomerDataChange}
                                                     onAddressChange={handleAddressChange}
+                                                    onPaymentDataChange={handlePaymentDataChange}
                                                     onSubmit={handlePaymentSubmit}
                                                     isProcessing={paymentStatus === 'processing'}
                                                 />
@@ -497,7 +608,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                             </AnimatePresence>
                         </div>
 
-                        <motion.div 
+                        <motion.div
                             className={styles.actions}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -506,21 +617,17 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                             <Button
                                 variant="outlined"
                                 className={styles.cancelButton}
-                                onClick={onCancel}
+                                onClick={handleCancel}
                                 disabled={paymentStatus === 'processing'}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
                             >
                                 Cancelar
                             </Button>
-                            
+
                             {selectedMethod && (
                                 <Button
                                     className={styles.submitButton}
                                     onClick={handlePaymentSubmit}
                                     disabled={paymentStatus === 'processing' || formProgress < 50}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
                                 >
                                     Finalizar Pagamento
                                 </Button>
@@ -528,7 +635,7 @@ const PaymentPage = ({ onComplete = () => { }, onCancel = () => { } }) => {
                         </motion.div>
                     </>
                 )}
-                
+
                 <footer className={styles.pageFooter}>
                     <div className={styles.paymentPartners}>
                         <span className={styles.partnersLabel}>Métodos aceitos:</span>

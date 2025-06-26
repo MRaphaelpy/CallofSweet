@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Box, Button, CircularProgress } from '@mui/material';
 import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
@@ -88,14 +87,12 @@ const ActionButtons = ({ editing, loading, setEditing, handleCancel }) => {
                                 borderRadius: 2,
                                 px: 4,
                                 boxShadow: 2,
+                                backgroundColor: theme.palette.success.main,
                                 '&:hover': {
                                     transform: 'translateY(-2px)',
                                     boxShadow: 3,
-                                    transition: 'transform 0.2s ease-in-out'
-                                },
-                                backgroundColor: theme.palette.success.main,
-                                '&:hover': {
                                     backgroundColor: theme.palette.success.dark,
+                                    transition: 'transform 0.2s ease-in-out, background-color 0.2s ease'
                                 }
                             }}
                         >

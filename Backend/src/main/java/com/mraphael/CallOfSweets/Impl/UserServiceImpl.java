@@ -80,12 +80,10 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
 
-        // Atualiza apenas os campos de perfil, não os endereços
         existingUser.setName(profileDTO.getName());
         existingUser.setEmail(profileDTO.getEmail());
         existingUser.setPhone(profileDTO.getPhone());
         existingUser.setBirthday(profileDTO.getBirthday());
-        // NÃO mexe na coleção de endereços
 
         User updatedUser = userRepository.save(existingUser);
         return userMapper.toDTO(updatedUser);

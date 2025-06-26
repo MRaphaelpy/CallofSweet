@@ -3,7 +3,7 @@ package com.mraphael.CallOfSweets.Services;
 import com.mraphael.CallOfSweets.DTOs.AddressDTO;
 import com.mraphael.CallOfSweets.Entities.Address;
 import com.mraphael.CallOfSweets.Entities.User;
-import com.mraphael.CallOfSweets.Repositories.AddressRepository; // Repositório para endereços
+import com.mraphael.CallOfSweets.Repositories.AddressRepository;
 import com.mraphael.CallOfSweets.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
