@@ -202,8 +202,8 @@ const ProductManagement = () => {
                         variant="fullWidth"
                     >
                         <Tab label="Todos os Produtos" />
-                        <Tab label="Produtos Ativos" />
-                        <Tab label="Produtos Inativos" />
+                        {/* <Tab label="Produtos Ativos" />
+                        <Tab label="Produtos Inativos" /> */}
                     </Tabs>
                 </Paper>
 

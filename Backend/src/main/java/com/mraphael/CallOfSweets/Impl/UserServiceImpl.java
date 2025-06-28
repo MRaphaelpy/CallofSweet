@@ -1,14 +1,13 @@
 package com.mraphael.CallOfSweets.Impl;
 
 import com.mraphael.CallOfSweets.Entities.User;
+import com.mraphael.CallOfSweets.Exceptions.UserExceptions;
 import com.mraphael.CallOfSweets.Repositories.UserRepository;
 import com.mraphael.CallOfSweets.Services.UserService;
 import com.mraphael.CallOfSweets.DTOs.UserDTO;
 import com.mraphael.CallOfSweets.Mappers.UserMapper;
 import com.mraphael.CallOfSweets.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
         if (userDTO == null) {
-            throw new IllegalArgumentException("UserDTO cannot be null");
+            throw UserExceptions.userDtoIsNull();
         }
         User user = userMapper.toEntity(userDTO);
         User savedUser = userRepository.save(user);
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDTO> findByEmail(String email) {
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
+            throw UserExceptions.emailIsNullOrEmpty();
         }
         return userRepository.findByEmail(email)
                 .map(userMapper::toDTO);
@@ -48,25 +47,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+                .orElseThrow(() -> UserExceptions.userNotFoundById(id));
         return userMapper.toDTO(user);
     }
-
-    @Override
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
 
     @Transactional
     public UserDTO updateUser(Long id, UserDTO userDTO) {
         if (userDTO == null) {
-            throw new IllegalArgumentException("UserDTO cannot be null");
+            throw UserExceptions.userDtoIsNull();
         }
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+                .orElseThrow(() -> UserExceptions.userNotFoundById(id));
         userMapper.map(userDTO, existingUser);
         User updatedUser = userRepository.save(existingUser);
         return userMapper.toDTO(updatedUser);
@@ -75,10 +66,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO updateUserProfile(Long id, UserDTO profileDTO) {
         if (profileDTO == null) {
-            throw new IllegalArgumentException("ProfileDTO cannot be null");
+            throw UserExceptions.profileDtoIsNull();
         }
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+                .orElseThrow(() -> UserExceptions.userNotFoundById(id));
 
         existingUser.setName(profileDTO.getName());
         existingUser.setEmail(profileDTO.getEmail());
@@ -93,8 +84,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with ID: " + id);
+            throw UserExceptions.userNotFoundById(id);
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

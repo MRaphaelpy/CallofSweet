@@ -1,7 +1,8 @@
 
 
 .product-card {
-  height: 500px;
+  height: 550px;
+  width: 450px;
   display: flex;
   flex-direction: column;
   position: relative;

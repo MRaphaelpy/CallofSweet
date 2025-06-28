@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,4 +27,6 @@ public class ProductVariation {
     private String size;
     private Integer stock;
     private BigDecimal price;
+    @OneToMany(mappedBy = "variation")
+    private List<OrderItem> orderItems = new ArrayList<>();
 }

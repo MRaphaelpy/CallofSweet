@@ -1,6 +1,8 @@
 package com.mraphael.CallOfSweets.Impl;
 
 import com.mraphael.CallOfSweets.Entities.ProductVariation;
+import com.mraphael.CallOfSweets.Exceptions.ProductVariationException;
+import com.mraphael.CallOfSweets.Exceptions.UserExceptions;
 import com.mraphael.CallOfSweets.Repositories.ProductVariationRepository;
 import com.mraphael.CallOfSweets.Services.ProductVariationService;
 import com.mraphael.CallOfSweets.DTOs.ProductVariationDTO;
@@ -31,7 +33,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     @Override
     public ProductVariationDTO getProductVariationById(int id) {
         ProductVariation productVariation = productVariationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product Variation not found with ID: " + id));
+                .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
         return productVariationMapper.toDTO(productVariation);
     }
 
@@ -45,7 +47,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     @Override
     public ProductVariationDTO updateProductVariation(int id, ProductVariationDTO productVariationDTO) {
         ProductVariation existingProductVariation = productVariationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product Variation not found with ID: " + id));
+                .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
         productVariationMapper.map(productVariationDTO, existingProductVariation);
         ProductVariation updatedProductVariation = productVariationRepository.save(existingProductVariation);
         return productVariationMapper.toDTO(updatedProductVariation);
@@ -53,8 +55,11 @@ public class ProductVariationServiceImpl implements ProductVariationService {
 
     @Override
     public void deleteProductVariation(int id) {
-        if (!productVariationRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Product Variation not found with ID: " + id);
+        ProductVariation variation = productVariationRepository.findById(id)
+                .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
+
+        if (variation.getOrderItems() != null && !variation.getOrderItems().isEmpty()) {
+            throw ProductVariationException.dontDeletProductVAriation();
         }
         productVariationRepository.deleteById(id);
     }

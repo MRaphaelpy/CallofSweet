@@ -162,12 +162,7 @@ const CartPage = () => {
             }}>
               <ShoppingBagIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
               Seus Produtos
-              <Badge
-                badgeContent={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-                color="primary"
-                showZero
-                sx={{ ml: 2 }}
-              />
+              
             </Typography>
             <Divider sx={{ mb: 3 }} />
             <CartItemsList
@@ -178,7 +173,7 @@ const CartPage = () => {
             />
 
             {cartItems.length > 0 && (
-              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
                 <Button
                   variant="outlined"
                   color="error"
@@ -186,10 +181,11 @@ const CartPage = () => {
                   disabled={loading}
                   startIcon={<DeleteIcon />}
                   sx={{
-                    borderRadius: 2,
+                    marginRight:2,
+                    borderRadius: 0.5,
                     textTransform: 'none',
                     py: 1,
-                    px: 3,
+                    px: 2,
                     borderWidth: 2,
                     '&:hover': {
                       borderWidth: 2
@@ -204,7 +200,7 @@ const CartPage = () => {
                   onClick={handleGoBack}
                   startIcon={<ArrowBackIcon />}
                   sx={{
-                    borderRadius: 2,
+                    borderRadius: 0.5,
                     textTransform: 'none',
                     py: 1,
                     px: 3,

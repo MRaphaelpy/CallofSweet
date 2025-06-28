@@ -1,15 +1,326 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.user-registration-form-container {
+  width: 100%;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.form-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.form-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.step-label {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #757575;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.form-step.active .step-number {
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  color: white;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+}
+
+.form-step.active .step-label {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.step-connector {
+  flex-grow: 1;
+  height: 3px;
+  background-color: #e0e0e0;
+  margin: 0 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--progress, 0%);
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  transition: width 0.5s ease;
+}
+
+.form-steps:has(.form-step:nth-child(3).active) .step-connector:nth-of-type(1)::after {
+  --progress: 100%;
+}
+
+.form-steps:has(.form-step:nth-child(5).active) .step-connector:nth-of-type(2)::after {
+  --progress: 100%;
+}
+
 
 .user-registration-form {
-    max-width: 500px;
+  max-width: 100%;
+  padding: 30px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-step-content {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.user-registration-form h2 {
+  text-align: center;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.form-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+
+.form-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.form-nav-buttons button {
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+
+.next-button:hover, .submit-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
+}
+
+.back-button:hover {
+  transform: translateY(-3px);
+}
+
+.password-strength {
+  margin: -10px 0 20px;
+  padding: 0 10px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.strength-bar {
+  height: 5px;
+  flex: 1;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.strength-bar.filled {
+  background-color: #2eb82e;
+}
+
+.strength-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+
+.confirmation-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.confirmation-item {
+  display: flex;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.confirmation-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.confirmation-label {
+  font-weight: 600;
+  color: #475569;
+  width: 40%;
+}
+
+.confirmation-value {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  margin: 25px 0;
+  font-size: 0.9rem;
+}
+
+.terms-checkbox input {
+  margin-top: 4px;
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  accent-color: #6366f1;
+}
+
+.terms-checkbox label {
+  color: #475569;
+  line-height: 1.5;
+}
+
+.terms-link {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.terms-link:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+  .user-registration-form {
     padding: 20px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .step-label {
+    font-size: 0.75rem;
+  }
+  
+  .form-nav-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-nav-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-steps {
+    padding: 0;
+  }
+  
+  .step-label {
+    display: none;
+  }
+  
+  .step-number {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
   }
   
   .user-registration-form h2 {
-    text-align: center;
-    margin-bottom: 24px;
-    color: #333;
+    font-size: 1.5rem;
   }
+  
+  .form-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .confirmation-item {
+    flex-direction: column;
+  }
+  
+  .confirmation-label {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%236366f1" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.submit-button {
+  animation: pulse 2s infinite;
+}
+
+.input-field {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6366f1;
+  font-size: 1rem;
+}
+
+.input-field input {
+  padding-left: 40px !important;
+}

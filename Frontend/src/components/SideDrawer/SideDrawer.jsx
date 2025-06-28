@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -26,8 +26,15 @@ import {
 import { motion } from 'framer-motion';
 import './SideDrawer.css';
 import AddIcon from '@mui/icons-material/Add';
+
 const SideDrawer = ({ open, toggleDrawer }) => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setIsLoggedIn(!!user);
+  }, []);
 
   const container = {
     hidden: { opacity: 0 },
@@ -57,10 +64,7 @@ const SideDrawer = ({ open, toggleDrawer }) => {
       onClose={toggleDrawer(false)}
       className="side-drawer"
     >
-      <Box
-        className="drawer-container"
-        role="presentation"
-      >
+      <Box className="drawer-container" role="presentation">
         <Box className="drawer-header">
           <Box className="drawer-logo" onClick={() => handleNavigation('/')}>
             <CakeIcon fontSize="large" />
@@ -72,11 +76,7 @@ const SideDrawer = ({ open, toggleDrawer }) => {
         </Box>
         <Divider />
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
+        <motion.div variants={container} initial="hidden" animate="show">
           <List>
             <motion.div variants={item}>
               <ListItem button className="drawer-item" onClick={() => handleNavigation('/')}>
@@ -106,12 +106,14 @@ const SideDrawer = ({ open, toggleDrawer }) => {
               </ListItem>
             </motion.div>
 
-            <motion.div variants={item}>
-              <ListItem button className="drawer-item" onClick={() => handleNavigation('/CadastroProduto')}>
-                <ListItemIcon><AddIcon /></ListItemIcon>
-                <ListItemText primary="Cadastrar Produto" />
-              </ListItem>
-            </motion.div>
+            {true && (
+              <motion.div variants={item}>
+                <ListItem button className="drawer-item" onClick={() => handleNavigation('/CadastroProduto')}>
+                  <ListItemIcon><AddIcon /></ListItemIcon>
+                  <ListItemText primary="Cadastrar Produto" />
+                </ListItem>
+              </motion.div>
+            )}
 
             <motion.div variants={item}>
               <ListItem button className="drawer-item" onClick={() => handleNavigation('/contact')}>

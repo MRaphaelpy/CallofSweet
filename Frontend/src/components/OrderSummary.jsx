@@ -1,4 +1,3 @@
-// components/OrderSummary.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaShippingFast, FaLock, FaArrowRight } from 'react-icons/fa';

@@ -1,26 +1,34 @@
-import React, { useState, useMemo } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header/Header';
-import Home from './pages/Home/Home';
-import CartPage from './pages/CartPage/CartPage';
 import Footer from './components/Footer/Footer';
 import SideDrawer from './components/SideDrawer/SideDrawer';
-import Profile from './pages/Profile/Profile';
+import LoadingScreen from './components/common/LoadingScreen';
+import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { ThemePreferenceProvider } from '../src/components/ThemePreferenceContext';
 import { lightTheme, darkTheme } from './theme';
 
-import CheckoutPage from './components/CheckoutPage';
-import PaymentPage from './components/PaymentPage/PaymentPage';
-import UserRegistrationPage from '../src/pages/UserRegistrationPage/UserRegistrationPage';
-import { Login } from '@mui/icons-material';
-import LoginPage from './pages/Login/LoginPage';
-import CadastroProduto from '../src/pages/CadastroProduto/ProductManagement';
-import { CartProvider } from './contexts/CartContext';
-import OrderConfirmation from './components/Order/OrderConfirmation';
+const Home = lazy(() => import('./pages/Home/Home'));
+const CartPage = lazy(() => import('./pages/CartPage/CartPage'));
+const Profile = lazy(() => import('./pages/Profile/Profile'));
+const UserRegistrationPage = lazy(() => import('./pages/UserRegistrationPage/UserRegistrationPage'));
+const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
+const CheckoutPage = lazy(() => import('./components/CheckoutPage'));
+const PaymentPage = lazy(() => import('./components/PaymentPage/PaymentPage'));
+const CadastroProduto = lazy(() => import('./pages/CadastroProduto/ProductManagement'));
+const OrderConfirmation = lazy(() => import('./components/Order/OrderConfirmation'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
+const ScrollToTop = lazy(() => import('./components/common/ScrollToTop'));
 
 function App() {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [mode, setMode] = useState(localStorage.getItem('darkMode') === 'true' ? 'dark' : 'light');
+  const [pageTransitions, setPageTransitions] = useState(true);
 
   const theme = useMemo(() => (mode === 'dark' ? darkTheme : lightTheme), [mode]);
 
@@ -30,40 +38,86 @@ function App() {
   };
 
   const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setDrawerOpen(open);
   };
 
+  const togglePageTransitions = () => {
+    setPageTransitions(!pageTransitions);
+    localStorage.setItem('pageTransitions', !pageTransitions);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <CartProvider>
-        <CssBaseline />
-        <BrowserRouter>
-          <div className="App">
-            <Header toggleDrawer={toggleDrawer} />
-            <SideDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+    <ThemePreferenceProvider initialMode={mode} onModeChange={handleThemeChange}>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <CartProvider>
+            <CssBaseline />
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme={mode}
+            />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Box className="app-container" sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <Header toggleDrawer={toggleDrawer} />
+                <SideDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-            <main>
-              <Routes>
-                <Route path="/register" element={<UserRegistrationPage></UserRegistrationPage>} />
-                <Route path="/" element={<Home />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/profile" element={<Profile onThemeChange={handleThemeChange} />} />
-                <Route path="/payment" element={<PaymentPage></PaymentPage>} />
-                <Route path="/checkout" element={<CheckoutPage></CheckoutPage>} />
-                <Route path="/login" element={<LoginPage></LoginPage>} />
-                <Route path="CadastroProduto" element={<CadastroProduto></CadastroProduto>} />
-                <Route path="/order-confirmation" element={<OrderConfirmation></OrderConfirmation>} />
-              </Routes>
-            </main>
+                <Box 
+                  component="main" 
+                  sx={{ 
+                    flexGrow: 1,
+                    width: '100%',
+                    pt: { xs: 2, sm: 3 },
+                    pb: { xs: 6, sm: 8 },
+                    px: { xs: 2, sm: 3, md: 4 },
+                    backgroundColor: theme.palette.background.default
+                  }}
+                >
+                  <Suspense fallback={<LoadingScreen />}>
+                    <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+                      <Routes>
 
-            <Footer />
-          </div>
-        </BrowserRouter>
-      </CartProvider>
-    </ThemeProvider>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<UserRegistrationPage />} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/checkout" element={<CheckoutPage />} />
+                        <Route path="/payment" element={<PaymentPage />} />
+                        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                        <Route path="/CadastroProduto" element={<CadastroProduto></CadastroProduto>} />
+                        <Route path="/profile/*" element={
+                          <Profile 
+                            onThemeChange={handleThemeChange}
+                            onToggleAnimations={togglePageTransitions}
+                            animationsEnabled={pageTransitions}
+                          />
+                        } />
+                      
+                        <Route path="/admin/products" element={<CadastroProduto />} />
+                        <Route path="/404" element={<NotFoundPage />} />
+                        <Route path="*" element={<Navigate replace to="/404" />} />
+                      </Routes>
+                    </AnimatePresence>
+                  </Suspense>
+                </Box>
+                <Footer />
+              </Box>
+            </BrowserRouter>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ThemePreferenceProvider>
   );
 }
 
