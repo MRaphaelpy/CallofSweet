@@ -1,4 +1,4 @@
-# Sweet Delights - E-commerce de Confeitaria Premium
+# Call Of Sweet - E-commerce de Confeitaria Premium
 
 ## 🍰 Sobre o Projeto
 
