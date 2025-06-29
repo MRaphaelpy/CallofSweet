@@ -11,11 +11,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, handleChange }) => {
     const formatBirthday = (dateString) => {
         if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR');
+        const [year, month, day] = dateString.split('-');
+        if (dateString.includes('/')) return dateString;
+        return `${day}/${month}/${year}`;
     };
 
-    
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -39,7 +40,7 @@ const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, h
         }
     };
 
-    
+
     const commonStyles = {
         '& .MuiInputBase-input.Mui-disabled': {
             WebkitTextFillColor: 'rgba(0, 0, 0, 0.87)',
@@ -57,7 +58,7 @@ const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, h
         '& .MuiSvgIcon-root': {
             fontSize: '1.2rem',
         },
-        
+
         '& .MuiInput-underline:after': {
             borderBottomStyle: 'none',
         },
@@ -67,7 +68,7 @@ const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, h
                 borderWidth: '1px',
             },
         } : {},
-        
+
         '& .MuiOutlinedInput-notchedOutline': {
             borderStyle: 'solid',
         },
@@ -77,7 +78,7 @@ const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, h
         '& .MuiFilledInput-underline:before': {
             borderBottomStyle: 'solid',
         },
-        
+
         '&& .Mui-focused': {
             outline: 'none',
         },

@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO getReviewById(int id) {
+    public ReviewDTO getReviewById(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with ID: " + id));
         return reviewMapper.toDTO(review);
@@ -43,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO updateReview(int id, ReviewDTO reviewDTO) {
+    public ReviewDTO updateReview(Long id, ReviewDTO reviewDTO) {
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with ID: " + id));
         reviewMapper.map(reviewDTO, existingReview);
@@ -52,7 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(int id) {
+    public void deleteReview(Long id) {
         if (!reviewRepository.existsById(id)) {
             throw new ResourceNotFoundException("Review not found with ID: " + id);
         }

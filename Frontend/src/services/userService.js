@@ -1,6 +1,6 @@
 import axios from "axios";
-const API_URL = "http://localhost:8080/api/users";
-const AUTH_URL = "http://localhost:8080/auth";
+const API_URL = "http://localhost:8081/api/users";
+const AUTH_URL = "http://localhost:8081/auth";
 
 export const createUser = async (userData) => {
   try {
@@ -86,7 +86,7 @@ export const getAuthToken = () => {
   return localStorage.getItem("authToken");
 };
 
-const API_URL2 = "http://localhost:8080/api/v1";
+const API_URL2 = "http://localhost:8081/api/v1";
 
 export const getProducts = async () => {
   try {

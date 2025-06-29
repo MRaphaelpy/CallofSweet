@@ -26,21 +26,21 @@ public class OrderItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderItemDTO> getOrderItemById(@PathVariable int id) {
+    public ResponseEntity<OrderItemDTO> getOrderItemById(@PathVariable Long id) {
         OrderItemDTO orderItem = orderItemService.getOrderItemById(id);
         return ResponseEntity.ok(orderItem);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<OrderItemDTO> updateOrderItem(
-            @PathVariable int id,
+            @PathVariable Long id,
             @Validated @RequestBody OrderItemDTO orderItemDTO) {
         OrderItemDTO updatedItem = orderItemService.updateOrderItem(id, orderItemDTO);
         return ResponseEntity.ok(updatedItem);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderItem(@PathVariable int id) {
+    public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
         orderItemService.deleteOrderItem(id);
         return ResponseEntity.noContent().build();
     }

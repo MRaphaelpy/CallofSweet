@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CartService {
     CartDTO createCart(CartDTO cartDTO);
-    CartDTO getCartById(int id);
+    CartDTO getCartById(Long id);
     List<CartDTO> getAllCarts();
-    CartDTO updateCart(int id, CartDTO cartDTO);
-    void deleteCart(int id);
+    CartDTO updateCart(Long id, CartDTO cartDTO);
+    void deleteCart(Long id);
     CartDTO getCartByUserId(Long userId);
 }

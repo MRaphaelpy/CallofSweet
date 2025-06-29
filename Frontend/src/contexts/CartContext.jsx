@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { API_BASE_URL } from '../../src/config';
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
@@ -59,7 +59,7 @@ export const CartProvider = ({ children }) => {
 
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/carts/user/${userId}`, {
+                const response = await axios.get(`${API_BASE_URL}/api/v1/carts/user/${userId}`, {
                     headers: getHeaders()
                 });
                 setCart(response.data);
@@ -80,7 +80,7 @@ export const CartProvider = ({ children }) => {
 
     const fetchCartItems = async (cartId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/cart-items/cart/${cartId}`, {
+            const response = await axios.get(`${API_BASE_URL}/api/v1/cart-items/cart/${cartId}`, {
                 headers: getHeaders()
             });
             setCartItems(response.data || []);
@@ -107,7 +107,7 @@ export const CartProvider = ({ children }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/carts', {
+            const response = await axios.post('${API_BASE_URL}/api/v1/carts', {
                 userId: userId,
                 totalPrice: 0
             }, {
@@ -165,7 +165,7 @@ export const CartProvider = ({ children }) => {
             if (existingItem) {
                 try {
                     const updatedItem = await axios.put(
-                        `http://localhost:8080/api/v1/cart-items/${existingItem.id}`,
+                        `${API_BASE_URL}/api/v1/cart-items/${existingItem.id}`,
                         {
                             id: existingItem.id,
                             cartId: currentCart.id,
@@ -195,7 +195,7 @@ export const CartProvider = ({ children }) => {
             } else {
                 try {
                     const response = await axios.post(
-                        'http://localhost:8080/api/v1/cart-items',
+                        '${API_BASE_URL}/api/v1/cart-items',
                         {
                             cartId: currentCart.id,
                             productId: product.id,
@@ -252,7 +252,7 @@ export const CartProvider = ({ children }) => {
         setLoading(true);
         try {
             const updatedItem = await axios.put(
-                `http://localhost:8080/api/v1/cart-items/${id}`,
+                `${API_BASE_URL}/api/v1/cart-items/${id}`,
                 {
                     ...itemToUpdate,
                     quantity: newQuantity
@@ -281,7 +281,7 @@ export const CartProvider = ({ children }) => {
 
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:8080/api/v1/cart-items/${id}`, {
+            await axios.delete(`${API_BASE_URL}/api/v1/cart-items/${id}`, {
                 headers: getHeaders()
             });
 
@@ -303,7 +303,7 @@ export const CartProvider = ({ children }) => {
         setLoading(true);
         try {
             const deletePromises = cartItems.map(item =>
-                axios.delete(`http://localhost:8080/api/v1/cart-items/${item.id}`, {
+                axios.delete(`${API_BASE_URL}/api/v1/cart-items/${item.id}`, {
                     headers: getHeaders()
                 })
             );

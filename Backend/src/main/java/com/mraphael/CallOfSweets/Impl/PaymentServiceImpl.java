@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDTO createPayment(PaymentDTO paymentDTO) {
-        Order order = orderRepository.findById(Math.toIntExact(paymentDTO.getOrderId()))
+        Order order = orderRepository.findById(paymentDTO.getOrderId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Order not found with id: " + paymentDTO.getOrderId()));
 
@@ -59,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentDTO getPaymentById(Long id) {
-        Payment payment = paymentRepository.findById(Math.toIntExact(id))
+        Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Payment not found with id: " + id));
         return mapToDTO(payment);
@@ -76,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDTO updatePayment(Long id, PaymentDTO paymentDTO) {
-        Payment payment = paymentRepository.findById(Math.toIntExact(id))
+        Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Payment not found with id: " + id));
 
@@ -92,7 +92,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void deletePayment(Long id) {
-        Payment payment = paymentRepository.findById(Math.toIntExact(id))
+        Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Payment not found with id: " + id));
 

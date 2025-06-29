@@ -31,7 +31,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     }
 
     @Override
-    public ProductVariationDTO getProductVariationById(int id) {
+    public ProductVariationDTO getProductVariationById(Long id) {
         ProductVariation productVariation = productVariationRepository.findById(id)
                 .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
         return productVariationMapper.toDTO(productVariation);
@@ -45,7 +45,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     }
 
     @Override
-    public ProductVariationDTO updateProductVariation(int id, ProductVariationDTO productVariationDTO) {
+    public ProductVariationDTO updateProductVariation(Long id, ProductVariationDTO productVariationDTO) {
         ProductVariation existingProductVariation = productVariationRepository.findById(id)
                 .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
         productVariationMapper.map(productVariationDTO, existingProductVariation);
@@ -54,7 +54,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     }
 
     @Override
-    public void deleteProductVariation(int id) {
+    public void deleteProductVariation(Long id) {
         ProductVariation variation = productVariationRepository.findById(id)
                 .orElseThrow(() -> ProductVariationException.productVariatioNotFoundById(id));
 

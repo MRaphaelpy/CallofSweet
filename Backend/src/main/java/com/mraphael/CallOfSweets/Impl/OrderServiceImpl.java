@@ -2,13 +2,12 @@ package com.mraphael.CallOfSweets.Impl;
 
 import com.mraphael.CallOfSweets.DTOs.OrderItemDTO;
 import com.mraphael.CallOfSweets.Entities.*;
+import com.mraphael.CallOfSweets.Exceptions.UserExceptions;
 import com.mraphael.CallOfSweets.Repositories.OrderRepository;
 import com.mraphael.CallOfSweets.Repositories.ProductVariationRepository;
 import com.mraphael.CallOfSweets.Repositories.UserRepository;
 import com.mraphael.CallOfSweets.Services.OrderService;
 import com.mraphael.CallOfSweets.DTOs.OrderDTO;
-import com.mraphael.CallOfSweets.Mappers.OrderMapper;
-import com.mraphael.CallOfSweets.Exceptions.OrderNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderItemDTO itemDTO : orderDTO.getItems()) {
             try {
-                Optional<ProductVariation> variationOpt = productVariationRepository.findById(Math.toIntExact(itemDTO.getVariationId()));
+                Optional<ProductVariation> variationOpt = productVariationRepository.findById(itemDTO.getVariationId());
 
                 if (variationOpt.isPresent()) {
                     OrderItem item = new OrderItem();
@@ -92,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getOrderById(Long id) {
-        Order order = orderRepository.findById(Math.toIntExact(id))
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Order not found with id: " + id));
         return mapToDTO(order);
@@ -111,8 +110,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getOrdersByUserId(Long userId) {
         List<Order> orders = orderRepository.findAllByUserId(userId);
         if (orders.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "No orders found for user with id: " + userId);
+            throw UserExceptions.userNotFoundById(userId);
         }
         return orders.stream()
                 .map(this::mapToDTO)
@@ -122,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO updateOrder(Long id, OrderDTO orderDTO) {
-        Order order = orderRepository.findById(Math.toIntExact(id))
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Order not found with id: " + id));
 
@@ -139,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteOrder(Long id) {
-        Order order = orderRepository.findById(Math.toIntExact(id))
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Order not found with id: " + id));
         orderRepository.delete(order);

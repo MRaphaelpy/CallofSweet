@@ -29,7 +29,7 @@ public class ProductVariationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductVariationDTO> getProductVariationById(@PathVariable int id) {
+    public ResponseEntity<ProductVariationDTO> getProductVariationById(@PathVariable Long id) {
         ProductVariationDTO variation = productVariationService.getProductVariationById(id);
         return ResponseEntity.ok(variation);
     }
@@ -42,14 +42,14 @@ public class ProductVariationController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductVariationDTO> updateProductVariation(
-            @PathVariable int id,
+            @PathVariable Long id,
             @Validated @RequestBody ProductVariationDTO variationDTO) {
         ProductVariationDTO updatedVariation = productVariationService.updateProductVariation(id, variationDTO);
         return ResponseEntity.ok(updatedVariation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductVariation(@PathVariable int id) {
+    public ResponseEntity<Void> deleteProductVariation(@PathVariable Long id) {
         productVariationService.deleteProductVariation(id);
         return ResponseEntity.noContent().build();
     }

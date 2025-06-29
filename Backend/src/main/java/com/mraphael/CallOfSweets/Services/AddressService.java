@@ -49,7 +49,7 @@ public class AddressService {
         return savedAddressDTO;
     }
     public AddressDTO getAddressById(Long id) {
-        Address address = addressRepository.findById(Math.toIntExact(id))
+        Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado com ID: " + id));
         AddressDTO addressDTO = new AddressDTO();
         addressDTO.setStreet(address.getStreet());
@@ -61,7 +61,7 @@ public class AddressService {
         return addressDTO;
     }
     public AddressDTO updateAddress(Long id, AddressDTO addressDTO) {
-        Address address = addressRepository.findById(Math.toIntExact(id))
+        Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado com ID: " + id));
 
         if (addressDTO.getCity() == null || addressDTO.getCity().isEmpty()) {
@@ -87,7 +87,7 @@ public class AddressService {
         return updatedAddressDTO;
     }
     public void deleteAddress(Long id) {
-        Address address = addressRepository.findById(Math.toIntExact(id))
+        Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado com ID: " + id));
         addressRepository.delete(address);
     }

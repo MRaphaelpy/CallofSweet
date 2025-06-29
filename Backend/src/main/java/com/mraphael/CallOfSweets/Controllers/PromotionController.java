@@ -28,7 +28,7 @@ public class PromotionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PromotionDTO> getPromotionById(@PathVariable int id) {
+    public ResponseEntity<PromotionDTO> getPromotionById(@PathVariable Long id) {
         PromotionDTO promotion = promotionService.getPromotionById(id);
         return ResponseEntity.ok(promotion);
     }
@@ -41,14 +41,14 @@ public class PromotionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PromotionDTO> updatePromotion(
-            @PathVariable int id,
+            @PathVariable Long id,
             @Validated @RequestBody PromotionDTO promotionDTO) {
         PromotionDTO promotion = promotionService.updatePromotion(id, promotionDTO);
         return ResponseEntity.ok(promotion);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePromotion(@PathVariable int id) {
+    public ResponseEntity<Void> deletePromotion(@PathVariable Long id) {
         promotionService.deletePromotion(id);
         return ResponseEntity.noContent().build();
     }

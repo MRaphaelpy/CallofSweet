@@ -9,7 +9,7 @@ import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/v1';
+const API_URL = 'http://localhost:8081/api/v1';
 
 const OrderConfirmation = () => {
     const location = useLocation();

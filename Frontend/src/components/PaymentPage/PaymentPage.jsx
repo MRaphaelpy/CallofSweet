@@ -12,8 +12,8 @@ import { Tooltip } from 'react-tooltip';
 import Confetti from 'react-confetti';
 import axios from 'axios';
 import { useWindowSize } from 'react-use';
-
-const API_URL = 'http://localhost:8080/api/v1';
+import { API_BASE_URL } from '../../config';
+const API_URL = 'http://localhost:8081/api/v1';
 
 const PaymentPage = () => {
     const location = useLocation();

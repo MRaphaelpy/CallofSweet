@@ -48,7 +48,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDTO getCartById(int id) {
+    public CartDTO getCartById(Long id) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + id));
         return cartMapper.toDTO(cart);
@@ -69,7 +69,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDTO updateCart(int id, CartDTO cartDTO) {
+    public CartDTO updateCart(Long id, CartDTO cartDTO) {
         Cart existingCart = cartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + id));
 
@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart(int id) {
+    public void deleteCart(Long id) {
         if (!cartRepository.existsById(id)) {
             throw new ResourceNotFoundException("Cart not found with ID: " + id);
         }

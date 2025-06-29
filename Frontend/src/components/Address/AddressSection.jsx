@@ -19,7 +19,7 @@ import AddressCard from './AddressCard';
 import AddressDialog from './AddressDialog';
 import EmptyAddressState from './EmptyAddressState';
 import { containerVariants } from './animations';
-
+import { API_BASE_URL } from '../../config';
 const AddressSection = () => {
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -99,7 +99,7 @@ const AddressSection = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 } : {};
 
-                const response = await axios.get(`http://localhost:8080/api/v1/users/${userId}`, config);
+                const response = await axios.get(`${API_BASE_URL}/api/v1/users/${userId}`, config);
                 const userData = response.data;
 
                 if (userData && userData.address) {
@@ -206,14 +206,14 @@ const AddressSection = () => {
             if (isEditing) {
 
                 response = await axios.put(
-                    `http://localhost:8080/api/v1/address/${addressData.id}`,
+                    `${API_BASE_URL}/api/v1/address/${addressData.id}`,
                     formattedAddress,
                     config
                 );
             } else {
 
                 response = await axios.post(
-                    `http://localhost:8080/api/v1/address/user/${userId}`,
+                    `${API_BASE_URL}/api/v1/address/user/${userId}`,
                     formattedAddress,
                     config
                 );
@@ -314,7 +314,7 @@ const AddressSection = () => {
             } : { headers: { 'Content-Type': 'application/json' } };
 
             await axios.delete(
-                `http://localhost:8080/api/v1/address/${id}`,
+                `${API_BASE_URL}/api/v1/address/${id}`,
                 config
             );
 
@@ -384,7 +384,7 @@ const AddressSection = () => {
             } : { headers: { 'Content-Type': 'application/json' } };
 
             await axios.put(
-                `http://localhost:8080/api/v1/address/${id}`,
+                `${API_BASE_URL}/api/v1/address/${id}`,
                 formattedAddress,
                 config
             );

@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface PromotionService {
     PromotionDTO createPromotion(PromotionDTO promotionDTO);
-    PromotionDTO getPromotionById(int id);
+    PromotionDTO getPromotionById(Long id);
     List<PromotionDTO> getAllPromotions();
-    PromotionDTO updatePromotion(int id, PromotionDTO promotionDTO);
-    void deletePromotion(int id);
+    PromotionDTO updatePromotion(Long id, PromotionDTO promotionDTO);
+    void deletePromotion(Long id);
 }

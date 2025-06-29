@@ -27,13 +27,13 @@ public class CartController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable int id) {
+    public ResponseEntity<CartDTO> getCartById(@PathVariable Long id) {
         CartDTO cart = cartService.getCartById(id);
         return ResponseEntity.ok(cart);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable int id) {
+    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
         cartService.deleteCart(id);
         return ResponseEntity.noContent().build();
     }

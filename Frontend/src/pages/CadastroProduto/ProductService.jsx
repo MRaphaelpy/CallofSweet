@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/v1/products';
+import { API_BASE_URL } from '../../config';
+const API_URL = 'http://localhost:8081/api/v1/products';
 
 const getAuthToken = () => {
     const userData = localStorage.getItem('userData');

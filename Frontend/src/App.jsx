@@ -73,9 +73,9 @@ function App() {
                 <Header toggleDrawer={toggleDrawer} />
                 <SideDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-                <Box 
-                  component="main" 
-                  sx={{ 
+                <Box
+                  component="main"
+                  sx={{
                     flexGrow: 1,
                     width: '100%',
                     pt: { xs: 2, sm: 3 },
@@ -97,13 +97,13 @@ function App() {
                         <Route path="/order-confirmation" element={<OrderConfirmation />} />
                         <Route path="/CadastroProduto" element={<CadastroProduto></CadastroProduto>} />
                         <Route path="/profile/*" element={
-                          <Profile 
+                          <Profile
                             onThemeChange={handleThemeChange}
                             onToggleAnimations={togglePageTransitions}
                             animationsEnabled={pageTransitions}
                           />
                         } />
-                      
+
                         <Route path="/admin/products" element={<CadastroProduto />} />
                         <Route path="/404" element={<NotFoundPage />} />
                         <Route path="*" element={<Navigate replace to="/404" />} />

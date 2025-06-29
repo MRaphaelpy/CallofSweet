@@ -6,7 +6,7 @@ import styles from './OrderConfirmationPage.module.css';
 import axios from 'axios';
 import Confetti from 'react-confetti';
 
-const API_URL = 'http://localhost:8080/api/v1';
+const API_URL = 'http://localhost:8081/api/v1';
 
 const OrderConfirmationPage = () => {
     const location = useLocation();

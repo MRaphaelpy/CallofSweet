@@ -29,7 +29,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemDTO getOrderItemById(int id) {
+    public OrderItemDTO getOrderItemById(Long id) {
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException("Order item not found with ID: " + id));
         return orderItemMapper.toDTO(orderItem);
@@ -43,7 +43,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public void deleteOrderItem(int id) {
+    public void deleteOrderItem(Long id) {
         if (!orderItemRepository.existsById(id)) {
             throw new OrderItemNotFoundException("Order item not found with ID: " + id);
         }
@@ -51,7 +51,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemDTO updateOrderItem(int id, OrderItemDTO orderItemDTO) {
+    public OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO) {
         OrderItem existingOrderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new OrderItemNotFoundException("Order item not found with ID: " + id));
         orderItemMapper.map(orderItemDTO, existingOrderItem);

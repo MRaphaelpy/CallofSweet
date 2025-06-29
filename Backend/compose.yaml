@@ -1,13 +1,51 @@
 version: '3.8'
+
 services:
   mysql:
-    image: 'mysql:latest'
+    image: 'mysql:8.0'
     container_name: mysql-container
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      MYSQL_DATABASE: ${DB_NAME:-mydatabase}
+      MYSQL_USER: ${DB_USER:-myuser}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-verysecret}
+      TZ: ${TZ:-America/Sao_Paulo}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/conf:/etc/mysql/conf.d
     ports:
-      - '3307:3306'
-    restart: always
+      - '${DB_PORT:-3307}:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-verysecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - backend
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer-container
+    environment:
+      - ADMINER_DEFAULT_SERVER=mysql
+      - ADMINER_DESIGN=pappu687
+    ports:
+      - '${ADMINER_PORT:-8080}:8080'
+    restart: unless-stopped
+    networks:
+      - backend
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
+    name: mysql_data_volume
+
+networks:
+  backend:
+    name: mysql_network
+    driver: bridge

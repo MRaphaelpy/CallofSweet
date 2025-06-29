@@ -8,7 +8,7 @@ import ProfileHeader from './ProfileHeader';
 import PersonalInfoForm from './PersonalInfoForm';
 import ActionButtons from './ActionButtons';
 import NotificationSnackbar from './NotificationSnackbar';
-
+import { API_BASE_URL } from '../../config';
 const PersonalInfoSection = () => {
     const theme = useTheme();
 
@@ -50,7 +50,7 @@ const PersonalInfoSection = () => {
             setInitialLoading(true);
             try {
                 const userId = getUserId();
-                const response = await axios.get(`http://localhost:8080/api/v1/users/${userId}`);
+                const response = await axios.get(`${API_BASE_URL}/api/v1/users/${userId}`);
 
                 const formattedData = {
                     id: response.data.id,
@@ -182,7 +182,7 @@ const PersonalInfoSection = () => {
 
 
             await axios.put(
-                `http://localhost:8080/api/v1/users/${userId}/profile`,
+                `${API_BASE_URL}/api/v1/users/${userId}/profile`,
                 profileUpdateData,
                 {
                     headers: {

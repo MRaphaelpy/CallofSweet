@@ -49,7 +49,7 @@ public class CartItemServiceImpl implements CartItemService {
         if (cartItemDTO.getCartId() == null) {
             throw new IllegalArgumentException("Cart ID cannot be null");
         }
-        Cart cart = cartRepository.findById(Math.toIntExact(cartItemDTO.getCartId()))
+        Cart cart = cartRepository.findById(cartItemDTO.getCartId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + cartItemDTO.getCartId()));
 
         ProductVariation variation = null;
@@ -57,7 +57,7 @@ public class CartItemServiceImpl implements CartItemService {
 
         if (cartItemDTO.getVariationId() != null) {
             try {
-                variation = productVariationRepository.findById(Math.toIntExact(cartItemDTO.getVariationId()))
+                variation = productVariationRepository.findById(cartItemDTO.getVariationId())
                         .orElse(null);
             } catch (Exception e) {
                 System.out.println("Error finding variation: " + e.getMessage());
@@ -67,7 +67,7 @@ public class CartItemServiceImpl implements CartItemService {
         if (variation == null && cartItemDTO.getProductId() != null) {
             try {
 
-                product = productRepository.findById(Math.toIntExact(cartItemDTO.getProductId()))
+                product = productRepository.findById(cartItemDTO.getProductId())
                         .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + cartItemDTO.getProductId()));
 
                 Optional<ProductVariation> defaultVariation = productVariationRepository.findFirstByProductId(product.getId());
@@ -126,7 +126,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDTO getCartItemById(Long id) {
-        CartItem cartItem = cartItemRepository.findById(Math.toIntExact(id))
+        CartItem cartItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem not found with ID: " + id));
 
         CartItemDTO dto = cartItemMapper.toDTO(cartItem);
@@ -157,12 +157,12 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemDTO updateCartItem(Long id, CartItemDTO cartItemDTO) {
-        CartItem existingItem = cartItemRepository.findById(Math.toIntExact(id))
+        CartItem existingItem = cartItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem not found with ID: " + id));
 
         if (cartItemDTO.getCartId() != null &&
                 !cartItemDTO.getCartId().equals(existingItem.getCart().getId())) {
-            Cart cart = cartRepository.findById(Math.toIntExact(cartItemDTO.getCartId()))
+            Cart cart = cartRepository.findById(cartItemDTO.getCartId())
                     .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + cartItemDTO.getCartId()));
             existingItem.setCart(cart);
         }
@@ -170,11 +170,11 @@ public class CartItemServiceImpl implements CartItemService {
         ProductVariation variation = existingItem.getVariation();
         if (cartItemDTO.getVariationId() != null &&
                 !cartItemDTO.getVariationId().equals(existingItem.getVariation().getId())) {
-            variation = productVariationRepository.findById(Math.toIntExact(cartItemDTO.getVariationId()))
+            variation = productVariationRepository.findById(cartItemDTO.getVariationId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product variation not found with ID: " + cartItemDTO.getVariationId()));
             existingItem.setVariation(variation);
         } else if (cartItemDTO.getProductId() != null) {
-            Product product = productRepository.findById(Math.toIntExact(cartItemDTO.getProductId()))
+            Product product = productRepository.findById(cartItemDTO.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + cartItemDTO.getProductId()));
 
             Optional<ProductVariation> defaultVariation = productVariationRepository.findFirstByProductId(product.getId());
@@ -208,9 +208,9 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteCartItem(Long id) {
-        if (!cartItemRepository.existsById(Math.toIntExact(id))) {
+        if (!cartItemRepository.existsById(id)) {
             throw new ResourceNotFoundException("CartItem not found with ID: " + id);
         }
-        cartItemRepository.deleteById(Math.toIntExact(id));
+        cartItemRepository.deleteById(id);
     }
 }

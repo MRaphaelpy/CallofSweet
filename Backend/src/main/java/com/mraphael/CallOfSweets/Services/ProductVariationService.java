@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ProductVariationService {
     ProductVariationDTO createProductVariation(ProductVariationDTO productVariationDTO);
-    ProductVariationDTO getProductVariationById(int id);
+    ProductVariationDTO getProductVariationById(Long id);
     List<ProductVariationDTO> getAllProductVariations();
-    ProductVariationDTO updateProductVariation(int id, ProductVariationDTO productVariationDTO);
-    void deleteProductVariation(int id);
+    ProductVariationDTO updateProductVariation(Long id, ProductVariationDTO productVariationDTO);
+    void deleteProductVariation(Long id);
 }

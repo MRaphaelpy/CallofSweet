@@ -5,7 +5,7 @@ public class ProductVariationException extends RuntimeException{
         super(message);
     }
 
-    public static ProductVariationException  productVariatioNotFoundById(int id){
+    public static ProductVariationException  productVariatioNotFoundById(Long id){
              return new ProductVariationException("Variação  nao encontrada com o ID: "+ id);
     }
 
