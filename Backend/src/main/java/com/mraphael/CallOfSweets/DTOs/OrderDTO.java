@@ -1,14 +1,11 @@
 package com.mraphael.CallOfSweets.DTOs;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class OrderDTO {
     private Long id;
     private Long userId;

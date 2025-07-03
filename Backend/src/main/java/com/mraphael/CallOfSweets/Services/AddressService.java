@@ -35,6 +35,7 @@ public class AddressService {
         address.setZipCode(addressDTO.getZipCode());
         address.setDefault(addressDTO.isDefault());
         address.setCountry(addressDTO.getCountry());
+        address.setNeighborhood(addressDTO.getNeighborhood());
         address.setUser(user);
         Address savedAddress = addressRepository.save(address);
         AddressDTO savedAddressDTO = new AddressDTO();

@@ -1,7 +1,14 @@
 package com.mraphael.CallOfSweets.Exceptions;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+@Data
+@Builder
+@NoArgsConstructor
 public class ApiError {
     private int status;
     private String error;
@@ -12,39 +19,6 @@ public class ApiError {
         this.status = status;
         this.error = error;
         this.message = message;
-        this.timestamp = timestamp;
-    }
-
-    // Getters and setters
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

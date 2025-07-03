@@ -40,7 +40,7 @@ const CreditCardPayment = ({
             [field]: formattedValue
         }));
 
-        
+
         if (errors[field]) {
             setErrors(prev => ({
                 ...prev,

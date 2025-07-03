@@ -60,7 +60,6 @@ public class CartItemServiceImpl implements CartItemService {
                 variation = productVariationRepository.findById(cartItemDTO.getVariationId())
                         .orElse(null);
             } catch (Exception e) {
-                System.out.println("Error finding variation: " + e.getMessage());
             }
         }
 
@@ -79,11 +78,8 @@ public class CartItemServiceImpl implements CartItemService {
                     variation.setPrice(cartItemDTO.getPrice());
                     variation.setStock(100);
                     variation = productVariationRepository.save(variation);
-                    System.out.println("Created default variation for product: " + product.getId());
                 }
             } catch (Exception e) {
-
-                System.out.println("Error processing product: " + e.getMessage());
                 throw new ResourceNotFoundException("Could not find or create product variation");
             }
         }

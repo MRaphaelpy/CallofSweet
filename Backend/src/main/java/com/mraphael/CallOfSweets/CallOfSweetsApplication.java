@@ -8,5 +8,4 @@ public class CallOfSweetsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CallOfSweetsApplication.class, args);
 	}
-
 }

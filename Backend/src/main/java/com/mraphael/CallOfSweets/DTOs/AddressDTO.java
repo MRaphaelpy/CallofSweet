@@ -1,11 +1,12 @@
 package com.mraphael.CallOfSweets.DTOs;
 
 import javax.validation.constraints.NotEmpty;
+
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class AddressDTO {
 
     @NotEmpty(message = "Campo name é obrigatório.")
@@ -23,7 +24,8 @@ public class AddressDTO {
 
     @NotEmpty(message = "Campo zipCode é obrigatório.")
     private String zipCode;
-
     private String country;
     private boolean isDefault;
+    @NotEmpty(message = "Campo neighborhood é obrigatório.")
+    String neighborhood;
 }

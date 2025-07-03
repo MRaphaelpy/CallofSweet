@@ -20,7 +20,7 @@ const PaymentPage = () => {
     const navigate = useNavigate();
     const { width, height } = useWindowSize();
 
-    
+
     const [selectedMethod, setSelectedMethod] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState('idle');
     const [showConfetti, setShowConfetti] = useState(false);
@@ -29,7 +29,7 @@ const PaymentPage = () => {
     const [createdOrderId, setCreatedOrderId] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
-    
+
     const checkoutData = location.state || {};
     const {
         amount = 0,
@@ -53,7 +53,7 @@ const PaymentPage = () => {
         },
     });
 
-    
+
     useEffect(() => {
         if (!cartItems || cartItems.length === 0) {
             navigate('/cart');
@@ -133,12 +133,12 @@ const PaymentPage = () => {
         setErrorMessage('');
 
         try {
-            
+
             if (!cartItems || cartItems.length === 0) {
                 throw new Error('O carrinho está vazio. Adicione produtos antes de finalizar a compra.');
             }
 
-            
+
             const userId = getUserId();
             if (!userId) {
                 throw new Error('Usuário não está autenticado. Por favor, faça login para continuar.');
@@ -146,14 +146,14 @@ const PaymentPage = () => {
 
             console.log("Processing cart items:", cartItems);
 
-            
+
             const orderData = {
                 userId: userId,
                 totalPrice: amount,
                 status: "PENDING",
                 paymentMethod: selectedMethod,
                 items: cartItems.map(item => {
-                    
+
                     let variationId;
 
                     if (item.variationId) {
@@ -173,7 +173,7 @@ const PaymentPage = () => {
                         subtotal: (item.price || 0) * (item.quantity || 1)
                     };
                 }),
-                
+
                 customerName: customerData.name,
                 customerEmail: customerData.email,
                 customerPhone: customerData.phone,
@@ -188,7 +188,7 @@ const PaymentPage = () => {
                 }
             };
 
-            
+
             const token = getAuthToken();
             const config = {
                 headers: {
@@ -199,14 +199,14 @@ const PaymentPage = () => {
 
             console.log("Sending order data:", orderData);
 
-            
+
             try {
-                
+
                 const orderResponse = await axios.post(`${API_URL}/orders`, orderData, config);
                 const orderId = orderResponse.data.id;
                 setCreatedOrderId(orderId);
 
-                
+
                 const paymentData = {
                     orderId: orderId,
                     paymentMethod: selectedMethod,
@@ -223,24 +223,24 @@ const PaymentPage = () => {
 
                 console.log("Sending payment data:", paymentData);
 
-                
+
                 await axios.post(`${API_URL}/payments`, paymentData, config);
 
             } catch (apiError) {
                 console.error("API error:", apiError);
                 console.log("Continuing with simulation since backend might not be ready");
-                
+
             }
 
-            
+
             setTimeout(() => {
                 setPaymentStatus('success');
                 setShowConfetti(true);
 
-                
+
                 localStorage.removeItem('cart');
 
-                
+
                 setTimeout(() => {
                     navigate('/order-confirmation', {
                         state: {
@@ -436,7 +436,7 @@ const PaymentPage = () => {
                         exit={{ opacity: 0 }}
                     >
                         <div className={styles.processingAnimation}>
-                       
+
                             <div className={styles.spinner}></div>
                         </div>
 

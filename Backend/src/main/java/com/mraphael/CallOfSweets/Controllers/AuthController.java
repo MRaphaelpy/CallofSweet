@@ -2,6 +2,7 @@ package com.mraphael.CallOfSweets.Controllers;
 
 import com.mraphael.CallOfSweets.DTOs.LoginRequestDTO;
 import com.mraphael.CallOfSweets.DTOs.LoginResponseDTO;
+import com.mraphael.CallOfSweets.DTOs.RegisterRequestDTO;
 import com.mraphael.CallOfSweets.Entities.User;
 import com.mraphael.CallOfSweets.Impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid User user) {
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequestDTO user) {
         authService.register(user);
         return ResponseEntity.status(201).body("Usuário registrado com sucesso");
     }

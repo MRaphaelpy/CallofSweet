@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @Table(name = "orders")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Order {
 
     @Id

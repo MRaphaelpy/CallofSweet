@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
     Container,
@@ -15,7 +14,6 @@ import {
     SettingsOutlined as SettingsIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import PersonalInfo from '../../components/PersonalInfo/index';
 import PersonalInfoSection from '../../components/PersonalInfo/PersonalInfoSection';
 import AddressSection from '../../components/Address/AddressSection';
 import OrdersSection from './components/OrdersSection';

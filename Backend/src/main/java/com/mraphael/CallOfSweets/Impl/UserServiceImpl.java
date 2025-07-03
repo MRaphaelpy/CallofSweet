@@ -6,7 +6,6 @@ import com.mraphael.CallOfSweets.Repositories.UserRepository;
 import com.mraphael.CallOfSweets.Services.UserService;
 import com.mraphael.CallOfSweets.DTOs.UserDTO;
 import com.mraphael.CallOfSweets.Mappers.UserMapper;
-import com.mraphael.CallOfSweets.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,7 +79,6 @@ public class UserServiceImpl implements UserService {
         User updatedUser = userRepository.save(existingUser);
         return userMapper.toDTO(updatedUser);
     }
-
 
     @Transactional
     public void deleteUser(Long id) {

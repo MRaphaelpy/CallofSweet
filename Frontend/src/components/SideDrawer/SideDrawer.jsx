@@ -100,7 +100,7 @@ const SideDrawer = ({ open, toggleDrawer }) => {
             </motion.div>
 
             <motion.div variants={item}>
-              <ListItem button className="drawer-item" onClick={() => handleNavigation('/about')}>
+              <ListItem button className="drawer-item" onClick={() => handleNavigation('/contact')}>
                 <ListItemIcon><InfoIcon /></ListItemIcon>
                 <ListItemText primary="Sobre Nós" />
               </ListItem>

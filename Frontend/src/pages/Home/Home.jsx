@@ -45,8 +45,8 @@ const Home = () => {
                 setCategories(categoriesData);
                 setError(null);
             } catch (err) {
-                console.error('Error fetching data:', err);
-                setError('Failed to load data. Please try again later.');
+                console.error('Erro ao procurar dados:', err);
+                setError('Erro ao procurar produtos ou categorias. Por favor, tente novamente mais tarde.');
             } finally {
                 setLoading(false);
             }
@@ -66,9 +66,6 @@ const Home = () => {
                     {loading ? <LoadingIndicator /> : <CategorySection categories={categories} />}
                 </section>
             </Container>
-            <Box>
-               
-            </Box>
 
             <Container>
                 <section className="home-section">

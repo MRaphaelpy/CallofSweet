@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../src/config';
+
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
@@ -19,7 +19,6 @@ export const CartProvider = ({ children }) => {
             const timer = setTimeout(() => {
                 setSuccessMessage(null);
             }, 3000);
-            
             return () => clearTimeout(timer);
         }
     }, [successMessage]);
@@ -63,7 +62,6 @@ export const CartProvider = ({ children }) => {
                     headers: getHeaders()
                 });
                 setCart(response.data);
-
                 if (response.data && response.data.id) {
                     fetchCartItems(response.data.id);
                 }
@@ -92,7 +90,6 @@ export const CartProvider = ({ children }) => {
     useEffect(() => {
         const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
         setCartCount(count);
-
         if (!getUserId() && cart) {
             localStorage.setItem('cart', JSON.stringify({
                 cart: cart,
@@ -107,7 +104,7 @@ export const CartProvider = ({ children }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('${API_BASE_URL}/api/v1/carts', {
+            const response = await axios.post(`${API_BASE_URL}/api/v1/carts`, {
                 userId: userId,
                 totalPrice: 0
             }, {
@@ -122,10 +119,9 @@ export const CartProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const addToCart = async (product) => {
-        console.log("Adicionando produto ao carrinho:", product);
         const userId = getUserId();
 
         if (!userId) {
@@ -143,24 +139,15 @@ export const CartProvider = ({ children }) => {
             let currentCart = cart;
 
             if (!currentCart) {
-                try {
-                    currentCart = await createCart();
-                    if (!currentCart) {
-                        setError("Não foi possível criar um carrinho. Tente novamente.");
-                        setLoading(false);
-                        return;
-                    }
-                } catch (err) {
-                    console.error("Erro ao criar carrinho:", err);
-                    setError("Erro ao criar carrinho. Tente novamente.");
+                currentCart = await createCart();
+                if (!currentCart) {
+                    setError("Não foi possível criar um carrinho. Tente novamente.");
                     setLoading(false);
                     return;
                 }
             }
 
-            const existingItem = cartItems.find(item =>
-                item.productId === product.id
-            );
+            const existingItem = cartItems.find(item => item.productId === product.id);
 
             if (existingItem) {
                 try {
@@ -181,12 +168,7 @@ export const CartProvider = ({ children }) => {
                         image: updatedItem.data.image || existingItem.image || product.image || getDefaultImage(product)
                     };
 
-                    setCartItems(prevItems =>
-                        prevItems.map(item =>
-                            item.id === existingItem.id ? updatedData : item
-                        )
-                    );
-
+                    setCartItems(prevItems => prevItems.map(item => item.id === existingItem.id ? updatedData : item));
                     setSuccessMessage("Produto adicionado ao carrinho!");
                 } catch (err) {
                     console.error("Erro ao atualizar item:", err);
@@ -195,7 +177,7 @@ export const CartProvider = ({ children }) => {
             } else {
                 try {
                     const response = await axios.post(
-                        '${API_BASE_URL}/api/v1/cart-items',
+                        `${API_BASE_URL}/api/v1/cart-items`,
                         {
                             cartId: currentCart.id,
                             productId: product.id,
@@ -204,8 +186,6 @@ export const CartProvider = ({ children }) => {
                         },
                         { headers: getHeaders() }
                     );
-
-                    console.log("Item adicionado com sucesso:", response.data);
 
                     const newItem = {
                         ...response.data,
@@ -241,11 +221,7 @@ export const CartProvider = ({ children }) => {
         const newQuantity = Math.max(1, itemToUpdate.quantity + change);
 
         if (!getUserId()) {
-            setCartItems(prevItems =>
-                prevItems.map(item =>
-                    item.id === id ? { ...item, quantity: newQuantity } : item
-                )
-            );
+            setCartItems(prevItems => prevItems.map(item => item.id === id ? { ...item, quantity: newQuantity } : item));
             return;
         }
 
@@ -260,11 +236,7 @@ export const CartProvider = ({ children }) => {
                 { headers: getHeaders() }
             );
 
-            setCartItems(prevItems =>
-                prevItems.map(item =>
-                    item.id === id ? { ...updatedItem.data, name: item.name, image: item.image } : item
-                )
-            );
+            setCartItems(prevItems => prevItems.map(item => item.id === id ? { ...updatedItem.data, name: item.name, image: item.image } : item));
         } catch (err) {
             console.error("Failed to update item quantity:", err);
             setError("Não foi possível atualizar a quantidade.");

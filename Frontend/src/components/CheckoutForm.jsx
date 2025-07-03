@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaUser, FaMapMarkerAlt, FaCreditCard } from 'react-icons/fa';
+import { FaUser, FaMapMarkerAlt, FaCreditCard, FaSearch } from 'react-icons/fa';
+import axios from 'axios';
 
 const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, variants }) => {
+    const [isLoadingCep, setIsLoadingCep] = useState(false);
+    const [cepError, setCepError] = useState("");
+    const [userAddresses, setUserAddresses] = useState([]);
+    const [loadingAddresses, setLoadingAddresses] = useState(false);
+    const API_BASE_URL = "http://localhost:8081";
+
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
         visible: {
@@ -18,6 +25,223 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
         tap: { scale: 0.95 }
     };
 
+    const getUserId = () => {
+        const userData = localStorage.getItem('userData');
+        return userData ? JSON.parse(userData).userId : null;
+    };
+
+    const getAuthToken = () => {
+        const userData = localStorage.getItem('userData');
+        return userData ? JSON.parse(userData).token : null;
+    };
+
+    const parseAddressString = (addressString) => {
+        if (!addressString) return {
+            street: '',
+            number: '',
+            neighborhood: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            complement: '',
+            isDefault: true
+        };
+
+        try {
+            const lines = addressString.split('\n').filter(line => line.trim() !== '');
+
+            let addressName = lines.length > 0 ? lines[0].trim() : 'Endereço';
+            let street = '';
+            let number = '';
+
+            if (lines.length > 1) {
+                const streetLine = lines[1].trim();
+                const streetParts = streetLine.split(',');
+                street = streetParts[0].trim();
+                number = streetParts.length > 1 ? streetParts[1].trim() : '';
+            }
+
+            let neighborhood = '';
+            let city = '';
+            let state = '';
+
+            if (lines.length > 2) {
+                const locationLine = lines[2].trim();
+                if (locationLine.startsWith(',')) {
+                    const cityStatePart = locationLine.substring(1).trim();
+                    const cityStateParts = cityStatePart.split('-');
+
+                    city = cityStateParts[0].trim();
+                    state = cityStateParts.length > 1 ? cityStateParts[1].trim() : '';
+                } else {
+                    const locationParts = locationLine.split(',');
+
+                    if (locationParts.length > 0) {
+                        neighborhood = locationParts[0].trim();
+
+                        if (locationParts.length > 1) {
+                            const cityStatePart = locationParts[1].trim();
+                            const cityStateParts = cityStatePart.split('-');
+
+                            city = cityStateParts[0].trim();
+                            state = cityStateParts.length > 1 ? cityStateParts[1].trim() : '';
+                        }
+                    }
+                }
+            }
+
+            let zipCode = '';
+
+            if (lines.length > 3) {
+                const cepLine = lines[3].trim();
+                if (cepLine.startsWith('CEP:')) {
+                    zipCode = cepLine.replace('CEP:', '').trim();
+                }
+            }
+
+            return {
+                name: addressName,
+                street,
+                number,
+                complement: '',
+                neighborhood,
+                city,
+                state,
+                zipCode,
+                isDefault: true
+            };
+        } catch (error) {
+            console.error("Error parsing address string:", error);
+            return {
+                name: 'Endereço',
+                street: '',
+                number: '',
+                complement: '',
+                neighborhood: '',
+                city: '',
+                state: '',
+                zipCode: '',
+                isDefault: true
+            };
+        }
+    };
+
+    useEffect(() => {
+        const fetchUserAddresses = async () => {
+            const userId = getUserId();
+            if (!userId) return;
+
+            setLoadingAddresses(true);
+            try {
+                const token = getAuthToken();
+
+                const config = token ? {
+                    headers: { Authorization: `Bearer ${token}` }
+                } : {};
+
+                const response = await axios.get(`${API_BASE_URL}/api/v1/users/${userId}`, config);
+                const userData = response.data;
+
+                let addressList = [];
+
+                if (userData && userData.address) {
+                    if (typeof userData.address === 'string') {
+                        const parsedAddress = parseAddressString(userData.address);
+
+                        const addressObject = {
+                            id: userData.id,
+                            ...parsedAddress
+                        };
+
+                        addressList = [addressObject];
+                    } else if (typeof userData.address === 'object') {
+                        const addressObject = {
+                            id: userData.id,
+                            name: userData.address.name || 'Casa',
+                            street: userData.address.street || '',
+                            number: userData.address.number || '',
+                            neighborhood: userData.address.neighborhood || '',
+                            city: userData.address.city || '',
+                            state: userData.address.state || '',
+                            zipCode: userData.address.zipCode || '',
+                            complement: userData.address.complement || '',
+                            isDefault: true
+                        };
+
+                        addressList = [addressObject];
+                    }
+                } else if (userData && userData.addresses && userData.addresses.length > 0) {
+                    addressList = userData.addresses.map(addr => {
+                        if (typeof addr === 'string') {
+                            const parsedAddress = parseAddressString(addr);
+                            return {
+                                id: Math.random().toString(36).substr(2, 9),
+                                ...parsedAddress
+                            };
+                        }
+                        return {
+                            id: addr.id || Math.random().toString(36).substr(2, 9),
+                            name: addr.name || 'Endereço',
+                            street: addr.street || '',
+                            number: addr.number || '',
+                            neighborhood: addr.neighborhood || '',
+                            city: addr.city || '',
+                            state: addr.state || '',
+                            zipCode: addr.zipCode || '',
+                            complement: addr.complement || '',
+                            isDefault: addr.isDefault || false
+                        };
+                    });
+                }
+
+                setUserAddresses(addressList);
+
+                const defaultAddress = addressList.find(addr => addr.isDefault) || (addressList.length > 0 ? addressList[0] : null);
+                if (defaultAddress) {
+                    onInfoChange({
+                        ...customerInfo,
+                        address: defaultAddress.street || '',
+                        addressNumber: defaultAddress.number || '',
+                        neighborhood: defaultAddress.neighborhood || '',
+                        city: defaultAddress.city || '',
+                        state: defaultAddress.state || '',
+                        zipCode: defaultAddress.zipCode || '',
+                        complement: defaultAddress.complement || '',
+                    });
+                }
+            } catch (err) {
+                console.error("Falha ao buscar endereços do usuário:", err);
+
+                try {
+                    const storedAddresses = JSON.parse(localStorage.getItem('userAddresses') || '[]');
+                    if (storedAddresses.length > 0) {
+                        setUserAddresses(storedAddresses);
+
+                        const defaultAddress = storedAddresses.find(addr => addr.isDefault) || storedAddresses[0];
+                        if (defaultAddress) {
+                            onInfoChange({
+                                ...customerInfo,
+                                address: defaultAddress.street || '',
+                                addressNumber: defaultAddress.number || '',
+                                neighborhood: defaultAddress.neighborhood || '',
+                                city: defaultAddress.city || '',
+                                state: defaultAddress.state || '',
+                                zipCode: defaultAddress.zipCode || '',
+                                complement: defaultAddress.complement || '',
+                            });
+                        }
+                    }
+                } catch (localErr) {
+                    console.error("Erro ao carregar endereços locais:", localErr);
+                }
+            } finally {
+                setLoadingAddresses(false);
+            }
+        };
+
+        fetchUserAddresses();
+    }, []);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         onInfoChange({
@@ -30,6 +254,7 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
         e.preventDefault();
         onSubmit();
     };
+
 
     return (
         <motion.form
@@ -116,6 +341,24 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
 
                 <div className="form-row">
                     <div className="form-group grow-2">
+                        <label htmlFor="zipCode">CEP*</label>
+                        <div className="input-with-button">
+                            <input
+                                type="text"
+                                id="zipCode"
+                                name="zipCode"
+                                value={customerInfo.zipCode}
+                                onChange={handleInputChange}
+                                required
+                                placeholder="00000-000"
+                            />
+                        </div>
+                        {cepError && <p className="error-message">{cepError}</p>}
+                    </div>
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group grow-2">
                         <label htmlFor="address">Rua/Avenida*</label>
                         <input
                             type="text"
@@ -136,6 +379,7 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
                             name="addressNumber"
                             value={customerInfo.addressNumber}
                             onChange={handleInputChange}
+                            required
                             placeholder="123"
                         />
                     </div>
@@ -162,6 +406,7 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
                             name="neighborhood"
                             value={customerInfo.neighborhood}
                             onChange={handleInputChange}
+                            required
                             placeholder="Seu bairro"
                         />
                     </div>
@@ -188,6 +433,7 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
                             name="state"
                             value={customerInfo.state}
                             onChange={handleInputChange}
+                            required
                         >
                             <option value="">Selecione</option>
                             <option value="AC">AC</option>
@@ -218,19 +464,6 @@ const CheckoutForm = ({ customerInfo, onInfoChange, onSubmit, isFormComplete, va
                             <option value="SE">SE</option>
                             <option value="TO">TO</option>
                         </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="zipCode">CEP*</label>
-                        <input
-                            type="text"
-                            id="zipCode"
-                            name="zipCode"
-                            value={customerInfo.zipCode}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="00000-000"
-                        />
                     </div>
                 </div>
             </motion.div>

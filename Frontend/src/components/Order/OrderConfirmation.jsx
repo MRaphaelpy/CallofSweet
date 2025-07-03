@@ -13,8 +13,8 @@ const OrderConfirmation = () => {
     const navigate = useNavigate();
     const { width, height } = useWindowSize();
     const [showConfetti, setShowConfetti] = useState(true);
-    
-    
+
+
     const [orderData, setOrderData] = useState({
         orderId: '',
         orderNumber: '',
@@ -25,24 +25,24 @@ const OrderConfirmation = () => {
         date: new Date().toLocaleDateString(),
         estimatedDelivery: '',
     });
-    
-    
+
+
     useEffect(() => {
-        
+
         if (location.state) {
-            const { 
-                orderId, 
-                orderNumber, 
-                totalAmount, 
-                customerName, 
+            const {
+                orderId,
+                orderNumber,
+                totalAmount,
+                customerName,
                 customerEmail,
                 paymentMethod
             } = location.state;
-            
-            
+
+
             const deliveryDate = new Date();
             let addedBusinessDays = 0;
-            
+
             while (addedBusinessDays < 7) {
                 deliveryDate.setDate(deliveryDate.getDate() + 1);
                 const dayOfWeek = deliveryDate.getDay();
@@ -50,7 +50,7 @@ const OrderConfirmation = () => {
                     addedBusinessDays++;
                 }
             }
-            
+
             setOrderData({
                 orderId: orderId || 'N/A',
                 orderNumber: orderNumber || 'N/A',
@@ -62,34 +62,34 @@ const OrderConfirmation = () => {
                 estimatedDelivery: deliveryDate.toLocaleDateString(),
             });
         } else {
-            
+
             navigate('/');
         }
-        
-        
+
+
         const timer = setTimeout(() => {
             setShowConfetti(false);
         }, 5000);
-        
+
         return () => clearTimeout(timer);
     }, [location.state, navigate]);
-    
+
     const handlePrintConfirmation = () => {
         window.print();
     };
-    
+
     const handleSendEmail = () => {
         alert(`Comprovante enviado para ${orderData.customerEmail}`);
     };
-    
+
     const handleTrackOrder = () => {
         navigate('/orders/track', { state: { orderId: orderData.orderId } });
     };
-    
+
     const handleContinueShopping = () => {
         navigate('/');
     };
-    
+
     const getPaymentMethodIcon = () => {
         switch (orderData.paymentMethod) {
             case 'credit-card':
@@ -102,7 +102,7 @@ const OrderConfirmation = () => {
                 return <FaCreditCard className={styles.methodIcon} />;
         }
     };
-    
+
     const getPaymentMethodName = () => {
         switch (orderData.paymentMethod) {
             case 'credit-card':
@@ -115,7 +115,7 @@ const OrderConfirmation = () => {
                 return 'Método não reconhecido';
         }
     };
-    
+
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -127,7 +127,7 @@ const OrderConfirmation = () => {
             }
         }
     };
-    
+
     const itemVariants = {
         hidden: { opacity: 0, y: 10 },
         visible: { opacity: 1, y: 0 }
@@ -136,8 +136,8 @@ const OrderConfirmation = () => {
     return (
         <div className={styles.confirmationPage}>
             {showConfetti && <Confetti width={width} height={height} recycle={false} numberOfPieces={150} />}
-            
-            <motion.div 
+
+            <motion.div
                 className={styles.container}
                 variants={containerVariants}
                 initial="hidden"
@@ -152,7 +152,7 @@ const OrderConfirmation = () => {
                     >
                         <FaArrowLeft /> Voltar para a loja
                     </motion.button>
-                    
+
                     <motion.h1
                         className={styles.title}
                         initial={{ y: -20 }}
@@ -162,32 +162,32 @@ const OrderConfirmation = () => {
                         Pedido Confirmado!
                     </motion.h1>
                 </header>
-                
+
                 <motion.div className={styles.confirmationCard} variants={itemVariants}>
                     <div className={styles.successIconContainer}>
                         <FaCheckCircle className={styles.successIcon} />
                     </div>
-                    
+
                     <h2 className={styles.thankYouMessage}>
                         Obrigado pela sua compra, {orderData.customerName}!
                     </h2>
-                    
+
                     <p className={styles.confirmationMessage}>
-                        Seu pedido foi recebido e está sendo processado. 
+                        Seu pedido foi recebido e está sendo processado.
                         Um e-mail de confirmação foi enviado para <strong>{orderData.customerEmail}</strong>.
                     </p>
-                    
+
                     <div className={styles.orderDetails}>
                         <div className={styles.detailItem}>
                             <span className={styles.detailLabel}>Número do Pedido:</span>
                             <span className={styles.detailValue}>{orderData.orderNumber}</span>
                         </div>
-                        
+
                         <div className={styles.detailItem}>
                             <span className={styles.detailLabel}>Data:</span>
                             <span className={styles.detailValue}>{orderData.date}</span>
                         </div>
-                        
+
                         <div className={styles.detailItem}>
                             <span className={styles.detailLabel}>Total:</span>
                             <span className={styles.detailValue}>
@@ -197,20 +197,20 @@ const OrderConfirmation = () => {
                                 }).format(orderData.totalAmount)}
                             </span>
                         </div>
-                        
+
                         <div className={styles.detailItem}>
                             <span className={styles.detailLabel}>Método de Pagamento:</span>
                             <span className={styles.detailValue}>
                                 {getPaymentMethodIcon()} {getPaymentMethodName()}
                             </span>
                         </div>
-                        
+
                         <div className={styles.detailItem}>
                             <span className={styles.detailLabel}>Entrega Estimada:</span>
                             <span className={styles.detailValue}>{orderData.estimatedDelivery}</span>
                         </div>
                     </div>
-                    
+
                     <div className={styles.shippingInfo}>
                         <div className={styles.shippingIcon}>
                             <FaBox />
@@ -223,7 +223,7 @@ const OrderConfirmation = () => {
                             </p>
                         </div>
                     </div>
-                    
+
                     <div className={styles.actions}>
                         <motion.div
                             className={styles.actionsRow}
@@ -231,23 +231,23 @@ const OrderConfirmation = () => {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5 }}
                         >
-                            <Button 
+                            <Button
                                 onClick={handlePrintConfirmation}
                                 className={styles.actionButton}
                                 variant="outlined"
                             >
                                 <FaPrint /> Imprimir
                             </Button>
-                            
-                            <Button 
+
+                            <Button
                                 onClick={handleSendEmail}
                                 className={styles.actionButton}
                                 variant="outlined"
                             >
                                 <FaEnvelope /> Enviar por Email
                             </Button>
-                            
-                            <Button 
+
+                            <Button
                                 onClick={handleTrackOrder}
                                 className={styles.actionButton}
                                 variant="outlined"
@@ -255,8 +255,8 @@ const OrderConfirmation = () => {
                                 <FaBox /> Rastrear Pedido
                             </Button>
                         </motion.div>
-                        
-                        <Button 
+
+                        <Button
                             onClick={handleContinueShopping}
                             className={styles.continueShoppingButton}
                         >
@@ -264,7 +264,7 @@ const OrderConfirmation = () => {
                         </Button>
                     </div>
                 </motion.div>
-                
+
                 <footer className={styles.pageFooter}>
                     <div className={styles.securityInfo}>
                         <IoShieldCheckmark /> Compra segura e protegida

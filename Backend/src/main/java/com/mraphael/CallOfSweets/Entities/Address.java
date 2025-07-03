@@ -33,6 +33,9 @@ public class Address {
     private String country;
 
     @Column(nullable = false)
+    private String neighborhood;
+
+    @Column(nullable = false)
     private boolean isDefault;
 
     @ManyToOne

@@ -129,12 +129,7 @@ const ProductList = ({ products, loading, onEdit, onDelete, onView }) => {
                                                     <EditIcon fontSize="small" />
                                                 </IconButton>
                                             </Tooltip>
-                                            {/* Ative se quiser deletar */}
-                                            {/* <Tooltip title="Excluir">
-                                                <IconButton size="small" color="error" onClick={() => onDelete(product.id)}>
-                                                    <DeleteIcon fontSize="small" />
-                                                </IconButton>
-                                            </Tooltip> */}
+
                                         </Box>
                                     </TableCell>
                                 </TableRow>

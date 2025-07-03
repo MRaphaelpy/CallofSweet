@@ -27,6 +27,7 @@ public class ProductVariation {
     private String size;
     private Integer stock;
     private BigDecimal price;
-    @OneToMany(mappedBy = "variation")
+
+    @OneToMany(mappedBy = "variation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 }

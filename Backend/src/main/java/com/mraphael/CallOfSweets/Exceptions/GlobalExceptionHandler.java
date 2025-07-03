@@ -45,7 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
-            HttpStatusCode status,  // Notice HttpStatusCode instead of HttpStatus
+            HttpStatusCode status,
             WebRequest request) {
 
         Map<String, String> validationErrors = new HashMap<>();
@@ -76,10 +76,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    // Keep only one generic Exception handler
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        ex.printStackTrace(); // Log the complete error (remove in production)
+        ex.printStackTrace();
 
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", new Date());

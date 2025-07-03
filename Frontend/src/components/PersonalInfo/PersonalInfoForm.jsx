@@ -11,11 +11,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 const PersonalInfoForm = ({ userData, tempUserData, editing, validationErrors, handleChange }) => {
     const formatBirthday = (dateString) => {
         if (!dateString) return '';
-        const [year, month, day] = dateString.split('-');
-        if (dateString.includes('/')) return dateString;
+        const str = String(dateString);
+        if (str.includes('/')) return str;
+        const [year, month, day] = str.split('-');
+        if (!year || !month || !day) return '';
         return `${day}/${month}/${year}`;
     };
-
 
     const containerVariants = {
         hidden: { opacity: 0 },

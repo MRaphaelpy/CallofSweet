@@ -30,8 +30,8 @@ const ProductManagement = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
     const [formOpen, setFormOpen] = useState(false);
-    const [formMode, setFormMode] = useState('create'); 
-    const [selectedProduct, setSelectedProduct] = useState(null); 
+    const [formMode, setFormMode] = useState('create');
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
     const [tabValue, setTabValue] = useState(0);
@@ -202,8 +202,7 @@ const ProductManagement = () => {
                         variant="fullWidth"
                     >
                         <Tab label="Todos os Produtos" />
-                        {/* <Tab label="Produtos Ativos" />
-                        <Tab label="Produtos Inativos" /> */}
+
                     </Tabs>
                 </Paper>
 
@@ -237,7 +236,7 @@ const ProductManagement = () => {
                     )}
                 </Box>
 
-         
+
                 <Dialog
                     open={formOpen}
                     onClose={handleFormClose}
@@ -254,7 +253,7 @@ const ProductManagement = () => {
                     </DialogContent>
                 </Dialog>
 
-       
+
                 <Dialog
                     open={!!selectedProduct}
                     onClose={closeProductView}
@@ -346,7 +345,7 @@ const ProductManagement = () => {
                                         </Typography>
                                     </Grid>
 
-                        
+
                                     {selectedProduct.reviews && selectedProduct.reviews.length > 0 && (
                                         <Grid item xs={12}>
                                             <Typography variant="h6" gutterBottom>
@@ -390,7 +389,7 @@ const ProductManagement = () => {
                     )}
                 </Dialog>
 
-         
+
                 <Dialog
                     open={deleteDialogOpen}
                     onClose={() => setDeleteDialogOpen(false)}
@@ -411,7 +410,7 @@ const ProductManagement = () => {
                     </DialogActions>
                 </Dialog>
 
-          
+
                 <Snackbar
                     open={snackbar.open}
                     autoHideDuration={6000}

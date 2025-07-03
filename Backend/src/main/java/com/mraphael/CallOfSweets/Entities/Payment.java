@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Payment {
 
     @Id
@@ -24,7 +23,7 @@ public class Payment {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false, unique = true)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @Column(nullable = false, length = 50)
@@ -40,11 +39,32 @@ public class Payment {
     @Column(nullable = false, length = 20)
     private PaymentStatus status;
 
+    @Column(length = 100)
+    private String payerEmail;
+
+    @Column(length = 100)
+    private String payerName;
+
+    @Column
+    private Integer installments;
+
+    @Column(columnDefinition = "TEXT")
+    private String details;
+
     public Payment(Order order, String paymentMethod, String transactionId, BigDecimal amount, PaymentStatus status) {
         this.order = order;
         this.paymentMethod = paymentMethod;
         this.transactionId = transactionId;
         this.amount = amount;
         this.status = status;
+    }
+
+    public Payment(Order order, String paymentMethod, String transactionId,
+                   BigDecimal amount, PaymentStatus status,
+                   String payerEmail, String payerName, Integer installments) {
+        this(order, paymentMethod, transactionId, amount, status);
+        this.payerEmail = payerEmail;
+        this.payerName = payerName;
+        this.installments = installments;
     }
 }

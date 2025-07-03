@@ -12,7 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

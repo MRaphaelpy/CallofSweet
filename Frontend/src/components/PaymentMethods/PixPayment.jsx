@@ -6,7 +6,7 @@ import Button from '../shared/Button';
 import Loader from '../shared/Loader';
 import { FaCopy, FaClock, FaMobileAlt, FaQrcode, FaCheckCircle, FaInfoCircle, FaUser } from 'react-icons/fa';
 import styles from './PixPayment.module.css';
-import {QRCodeSVG} from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 
 const PixPayment = ({
     amount,
@@ -18,11 +18,11 @@ const PixPayment = ({
     const [pixCode, setPixCode] = useState('');
     const [qrCodeLoaded, setQrCodeLoaded] = useState(false);
     const [errors, setErrors] = useState({});
-    const [countdown, setCountdown] = useState(900); 
+    const [countdown, setCountdown] = useState(900);
     const [copySuccess, setCopySuccess] = useState(false);
     const [activeTab, setActiveTab] = useState('qrcode');
 
-    
+
     useEffect(() => {
         const generatePixCode = () => {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,14 +33,14 @@ const PixPayment = ({
             return result;
         };
 
-        
+
         setTimeout(() => {
             setPixCode(generatePixCode());
             setQrCodeLoaded(true);
         }, 1000);
     }, []);
 
-    
+
     useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => {
@@ -105,7 +105,7 @@ const PixPayment = ({
         >
             <div className={styles.paymentContainer}>
                 <div className={styles.tabsContainer}>
-                    <motion.button 
+                    <motion.button
                         className={`${styles.tabButton} ${activeTab === 'qrcode' ? styles.activeTab : ''}`}
                         onClick={() => setActiveTab('qrcode')}
                         whileHover={{ scale: 1.02 }}
@@ -114,7 +114,7 @@ const PixPayment = ({
                         <FaQrcode />
                         <span>QR Code PIX</span>
                     </motion.button>
-                    <motion.button 
+                    <motion.button
                         className={`${styles.tabButton} ${activeTab === 'details' ? styles.activeTab : ''}`}
                         onClick={() => setActiveTab('details')}
                         whileHover={{ scale: 1.02 }}
@@ -128,7 +128,7 @@ const PixPayment = ({
                 <div className={styles.contentContainer}>
                     <AnimatePresence mode="wait">
                         {activeTab === 'qrcode' ? (
-                            <motion.div 
+                            <motion.div
                                 key="qrcode"
                                 className={styles.pixContainer}
                                 initial={{ opacity: 0, x: -20 }}
@@ -137,7 +137,7 @@ const PixPayment = ({
                                 transition={{ duration: 0.3 }}
                             >
                                 <div className={styles.pixHeader}>
-                                    <motion.div 
+                                    <motion.div
                                         className={styles.amountDisplay}
                                         initial={{ scale: 0.9 }}
                                         animate={{ scale: 1 }}
@@ -149,8 +149,8 @@ const PixPayment = ({
                                             currency: 'BRL'
                                         }).format(amount)}</h2>
                                     </motion.div>
-                                    
-                                    <motion.div 
+
+                                    <motion.div
                                         className={`${styles.countdown} ${countdown < 120 ? styles.expiringSoon : ''}`}
                                         animate={countdown < 120 ? { scale: [1, 1.05, 1], transition: { repeat: Infinity, duration: 2 } } : {}}
                                     >
@@ -179,7 +179,7 @@ const PixPayment = ({
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ type: "spring", stiffness: 300, damping: 15 }}
                                     >
-                                        <motion.div 
+                                        <motion.div
                                             className={styles.qrCodeWrapper}
                                             whileHover={{ boxShadow: "0px 8px 30px rgba(0, 0, 0, 0.15)" }}
                                             transition={{ duration: 0.3 }}
@@ -216,7 +216,7 @@ const PixPayment = ({
                                                 <FaInfoCircle className={styles.infoIcon} />
                                                 <h4>Como pagar</h4>
                                             </div>
-                                            
+
                                             <ol className={styles.instructions}>
                                                 {[
                                                     "Abra o aplicativo do seu banco",
@@ -240,7 +240,7 @@ const PixPayment = ({
                                 )}
                             </motion.div>
                         ) : (
-                            <motion.div 
+                            <motion.div
                                 key="details"
                                 className={styles.customerInfoForm}
                                 initial={{ opacity: 0, x: 20 }}
@@ -252,7 +252,7 @@ const PixPayment = ({
                                     <FaUser />
                                     <h3>Informações do Comprador</h3>
                                 </div>
-                                
+
                                 <div className={styles.formFields}>
                                     <FormField
                                         label="Nome Completo"
@@ -311,22 +311,22 @@ const PixPayment = ({
                                     </FormField>
                                 </div>
 
-                                <motion.div 
+                                <motion.div
                                     className={styles.securityInfo}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.4 }}
                                 >
-                                    <motion.div 
+                                    <motion.div
                                         className={styles.securityIcon}
-                                        animate={{ 
+                                        animate={{
                                             scale: [1, 1.1, 1],
                                             rotate: [0, 10, -10, 0]
                                         }}
-                                        transition={{ 
-                                            duration: 2, 
-                                            repeat: Infinity, 
-                                            repeatDelay: 5 
+                                        transition={{
+                                            duration: 2,
+                                            repeat: Infinity,
+                                            repeatDelay: 5
                                         }}
                                     >
                                         🔒
@@ -338,7 +338,7 @@ const PixPayment = ({
                     </AnimatePresence>
                 </div>
 
-                <motion.div 
+                <motion.div
                     className={styles.actionButtonContainer}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
